@@ -3,7 +3,7 @@
 
 module.exports = [
 
-"#ifdef INSTANCE_TRANSFORM",
+"\n#ifdef INSTANCE_TRANSFORM",
 
 "mat3 inverse(mat3 m) {",
 
@@ -28,6 +28,6 @@ module.exports = [
               "b21, (-a21 * a00 + a01 * a20), (a11 * a00 - a01 * a10)) / det;",
 "}",
 
-"#endif"
+"#endif\n"
 
 ].join("\n");

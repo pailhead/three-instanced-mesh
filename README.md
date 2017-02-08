@@ -90,3 +90,8 @@ scene.add( cluster );
   - **[bool]:disposeGeometry** 
   
     delete the original geometry provided
+
+## Methods
+
+Extends `THREE.Mesh`, no functionality added on top yet. 
+

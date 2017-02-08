@@ -4,6 +4,8 @@
 
 module.exports = function( THREE ){
 
+var InstancedDistributedGeometry = require('./InstancedDistributedGeometry')(THREE);
+
 function InstancedMesh ( geometry , material , distributeFunction , numCopies , uniformScale , disposeRegular ) {
 
 	THREE.Mesh.call( this , new InstancedDistributedGeometry( geometry , numCopies , distributeFunction , disposeRegular ) , material.clone() );

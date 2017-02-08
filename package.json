@@ -1,0 +1,31 @@
+{
+  "name": "three-instanced-mesh",
+  "version": "84.0.1",
+  "description": "Scene graph level abstraction for three.js InstancedBufferGeometry",
+  "main": "index.js",
+  "directories": {
+    "example": "example"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pailhead/three-instanced-mesh.git"
+  },
+  "keywords": [
+    "threejs",
+    "webgl",
+    "instancing",
+    "ANGLE_instanced_arrays",
+    "glsl",
+    "javascript",
+    "3d"
+  ],
+  "author": "Dusan Bosnjak",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/pailhead/three-instanced-mesh/issues"
+  },
+  "homepage": "https://github.com/pailhead/three-instanced-mesh#readme"
+}

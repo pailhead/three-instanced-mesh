@@ -1,6 +1,6 @@
 # three-instanced-mesh
 
-Higher level abstraction of `THREE.InstancedBufferGeometry` for [three.js](https://github.com/mrdoob/three.js/). For a webgl level overview check out (TojiCode](http://blog.tojicode.com/2013/07/webgl-instancing-with.html).
+Higher level abstraction of `THREE.InstancedBufferGeometry` for [three.js](https://github.com/mrdoob/three.js/). For a webgl level overview check out [TojiCode](http://blog.tojicode.com/2013/07/webgl-instancing-with.html).
 
 # what it should do
 

@@ -8,7 +8,7 @@ function InstancedDistributedGeometry (
 	disposeRegular								//destroy the geometry that was converted to this
 ) {
 
-	InstancedBufferGeometry.call( this );
+	THREE.InstancedBufferGeometry.call( this );
 
 	this.fromGeometry( regularGeometry , numCopies , distributeFunction );
 
@@ -18,14 +18,14 @@ function InstancedDistributedGeometry (
 
 InstancedDistributedGeometry.prototype = Object.create( InstancedBufferGeometry.prototype );
 
-InstancedDistributedGeometry.constructor = InstancedDistributedGeometry;
+InstancedDistributedGeometry.constructor = THREE.InstancedDistributedGeometry;
 
 InstancedDistributedGeometry.prototype.fromGeometry = function( regularGeometry , numCopies , distributeFunction ){
 
 	//a helper node used to compute positions for each instance
-	var helperObject = new Object3D(); 	
-	var normalMatrix = new Matrix3();
-	var rotationMatrix = new Matrix4();
+	var helperObject = new THREE.Object3D(); 	
+	var normalMatrix = new THREE.Matrix3();
+	var rotationMatrix = new THREE.Matrix4();
 
 
 	//copy attributes from the provided geometry

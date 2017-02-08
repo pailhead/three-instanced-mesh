@@ -37,7 +37,9 @@ That being said... the module contains a monkey patch that modifies the followin
 
 The class will run the "placement function" during construction transforming an internal `Object3D` node and writing the TRS matrix into an attribute buffer N times. It will convert the provided `THREE.BufferGeometry` into a `THREE.InstancedBufferGeometry` and attach the additional attribute. The result is an `InstancedMesh` class (extends `Mesh`) with an `InstancedDistributedGeometry` class (extends `InstancedBufferGeometry`). This can then be treated as one object as far as rendering is concerned. A different structure can describe colliders for example and could be constructed in the placement function.  
 
-# NOTE this works only on r78, see this [pull request](https://github.com/mrdoob/three.js/pull/10750) for discussion, and this [fork](https://github.com/pailhead/three.js/tree/InstancedMesh) if you want to build it for r84.
+# NOTE 
+
+this works only on r78, see this [pull request](https://github.com/mrdoob/three.js/pull/10750) for discussion, and this [fork](https://github.com/pailhead/three.js/tree/InstancedMesh) if you want to build it for r84.
 
 # Usage
 
@@ -46,7 +48,9 @@ The class will run the "placement function" during construction transforming an 
 
 ```javascript
 
-var InstancedMesh = require('three-instanced-mesh')( THREE ); //make sure that the version of THREE provided matches the one from the patch
+require(../../node_modules/three-instanced-mesh/monkey-patch.js)(THREE); //you have to run this file if you want default materials to work, and your threejs version has to be 78
+
+var InstancedMesh = require('three-instanced-mesh')( THREE ); 
 
 var boxGeometry = new THREE.BoxBufferGeometry(2,2,2,1,1,1);
 var material = new THREE.MeshPhongMaterial();

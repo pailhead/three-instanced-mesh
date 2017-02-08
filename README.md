@@ -40,7 +40,7 @@ The class will run the "placement function" during construction transforming an 
 # Usage
 
 ```
-npm install three-instanced-mesh
+npm install three-instanced-mesh --save
 ```
 ```javascript
 
@@ -59,4 +59,7 @@ var cluster = new THREE.InstancedMesh( boxGeometry , material , //this is the sa
   true,                                                         //uniform scale, if you know that the placement function will not do a non-uniform scale, this will optimize the shader
   false                                                         //should the original geometry be disposed of
 );
+
+scene.add( cluster );
+```
 

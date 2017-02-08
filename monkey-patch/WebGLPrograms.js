@@ -1,12 +1,10 @@
 
-module.exports = function( THREE ) { 
-/**
- * @author mrdoob / http://mrdoob.com/
- */
 
-function WebGLPrograms( renderer, capabilities ) {
+module.exports = function(THREE){
 
-	console.log( '[INSTANCED_MESH] WebGLPrograms loaded.');
+return  function ( renderer, capabilities ) {
+
+	console.log( '[INSTANCE_MESH] patch WebGLPrograms' );
 
 	var programs = [];
 
@@ -16,7 +14,6 @@ function WebGLPrograms( renderer, capabilities ) {
 		MeshBasicMaterial: 'basic',
 		MeshLambertMaterial: 'lambert',
 		MeshPhongMaterial: 'phong',
-		MeshToonMaterial: 'phong',
 		MeshStandardMaterial: 'physical',
 		MeshPhysicalMaterial: 'physical',
 		LineBasicMaterial: 'basic',
@@ -27,20 +24,21 @@ function WebGLPrograms( renderer, capabilities ) {
 	var parameterNames = [
 		"precision", "supportsVertexTextures", "map", "mapEncoding", "envMap", "envMapMode", "envMapEncoding",
 		"lightMap", "aoMap", "emissiveMap", "emissiveMapEncoding", "bumpMap", "normalMap", "displacementMap", "specularMap",
-		"roughnessMap", "metalnessMap", "gradientMap",
+		"roughnessMap", "metalnessMap",
 		"alphaMap", "combine", "vertexColors", "fog", "useFog", "fogExp",
 		"flatShading", "sizeAttenuation", "logarithmicDepthBuffer", "skinning",
 		"maxBones", "useVertexTexture", "morphTargets", "morphNormals",
 		"maxMorphTargets", "maxMorphNormals", "premultipliedAlpha",
-		"numDirLights", "numPointLights", "numSpotLights", "numHemiLights", "numRectAreaLights",
+		"numDirLights", "numPointLights", "numSpotLights", "numHemiLights",
 		"shadowMapEnabled", "shadowMapType", "toneMapping", 'physicallyCorrectLights',
-		"alphaTest", "doubleSided", "flipSided", "numClippingPlanes", "numClipIntersection", "depthPacking",
+		"alphaTest", "doubleSided", "flipSided", "numClippingPlanes", "depthPacking",
 
+		"TBN", "maskMap" , "maskMapIntensity", "maskSecondaryUV",
 		'instanceTransform','instanceUniform' //InstancedMesh extension
 	];
 
 
-	function allocateBones( object ) {
+	function allocateBones ( object ) {
 
 		if ( capabilities.floatVertexTextures && object && object.skeleton && object.skeleton.useVertexTexture ) {
 
@@ -60,7 +58,7 @@ function WebGLPrograms( renderer, capabilities ) {
 
 			var maxBones = nVertexMatrices;
 
-			if ( object !== undefined && (object && object.isSkinnedMesh) ) {
+			if ( object !== undefined && object instanceof THREE.SkinnedMesh ) {
 
 				maxBones = Math.min( object.skeleton.bones.length, maxBones );
 
@@ -84,13 +82,13 @@ function WebGLPrograms( renderer, capabilities ) {
 
 		if ( ! map ) {
 
-			encoding = LinearEncoding;
+			encoding = THREE.LinearEncoding;
 
-		} else if ( map.isTexture ) {
+		} else if ( map instanceof THREE.Texture ) {
 
 			encoding = map.encoding;
 
-		} else if ( map.isWebGLRenderTarget ) {
+		} else if ( map instanceof THREE.WebGLRenderTarget ) {
 
 			console.warn( "THREE.WebGLPrograms.getTextureEncodingFromMap: don't use render targets as textures. Use their .texture property instead." );
 			encoding = map.texture.encoding;
@@ -98,9 +96,9 @@ function WebGLPrograms( renderer, capabilities ) {
 		}
 
 		// add backwards compatibility for WebGLRenderer.gammaInput/gammaOutput parameter, should probably be removed at some point.
-		if ( encoding === LinearEncoding && gammaOverrideLinear ) {
+		if ( encoding === THREE.LinearEncoding && gammaOverrideLinear ) {
 
-			encoding = GammaEncoding;
+			encoding = THREE.GammaEncoding;
 
 		}
 
@@ -108,7 +106,7 @@ function WebGLPrograms( renderer, capabilities ) {
 
 	}
 
-	this.getParameters = function ( material, lights, fog, nClipPlanes, nClipIntersection, object ) {
+	this.getParameters = function ( material, lights, fog, nClipPlanes, object ) {
 
 		var shaderID = shaderIDs[ material.type ];
 
@@ -131,7 +129,8 @@ function WebGLPrograms( renderer, capabilities ) {
 		}
 
 		var currentRenderTarget = renderer.getCurrentRenderTarget();
-
+		// if( material.name == 'discFront' ) debugger
+		// debugger
 		var parameters = {
 
 			shaderID: shaderID,
@@ -144,7 +143,7 @@ function WebGLPrograms( renderer, capabilities ) {
 			envMap: !! material.envMap,
 			envMapMode: material.envMap && material.envMap.mapping,
 			envMapEncoding: getTextureEncodingFromMap( material.envMap, renderer.gammaInput ),
-			envMapCubeUV: ( !! material.envMap ) && ( ( material.envMap.mapping === CubeUVReflectionMapping ) || ( material.envMap.mapping === CubeUVRefractionMapping ) ),
+			envMapCubeUV: ( !! material.envMap ) && ( ( material.envMap.mapping === THREE.CubeUVReflectionMapping ) || ( material.envMap.mapping === THREE.CubeUVRefractionMapping ) ),
 			lightMap: !! material.lightMap,
 			aoMap: !! material.aoMap,
 			emissiveMap: !! material.emissiveMap,
@@ -157,17 +156,15 @@ function WebGLPrograms( renderer, capabilities ) {
 			specularMap: !! material.specularMap,
 			alphaMap: !! material.alphaMap,
 
-			gradientMap: !! material.gradientMap,
-
 			combine: material.combine,
 
 			vertexColors: material.vertexColors,
 
-			fog: !! fog,
+			fog: fog,
 			useFog: material.fog,
-			fogExp: (fog && fog.isFogExp2),
+			fogExp: fog instanceof THREE.FogExp2,
 
-			flatShading: material.shading === FlatShading,
+			flatShading: material.shading === THREE.FlatShading,
 
 			sizeAttenuation: material.sizeAttenuation,
 			logarithmicDepthBuffer: capabilities.logarithmicDepthBuffer,
@@ -184,11 +181,9 @@ function WebGLPrograms( renderer, capabilities ) {
 			numDirLights: lights.directional.length,
 			numPointLights: lights.point.length,
 			numSpotLights: lights.spot.length,
-			numRectAreaLights: lights.rectArea.length,
 			numHemiLights: lights.hemi.length,
 
 			numClippingPlanes: nClipPlanes,
-			numClipIntersection: nClipIntersection,
 
 			shadowMapEnabled: renderer.shadowMap.enabled && object.receiveShadow && lights.shadows.length > 0,
 			shadowMapType: renderer.shadowMap.type,
@@ -199,15 +194,20 @@ function WebGLPrograms( renderer, capabilities ) {
 			premultipliedAlpha: material.premultipliedAlpha,
 
 			alphaTest: material.alphaTest,
-			doubleSided: material.side === DoubleSide,
-			flipSided: material.side === BackSide,
+			doubleSided: material.side === THREE.DoubleSide,
+			flipSided: material.side === THREE.BackSide,
 
 			depthPacking: ( material.depthPacking !== undefined ) ? material.depthPacking : false,
 
 			instanceTransform: !!material.instanceTransform,  	//InstancedMesh extension
 			instanceUniform: !!material.instanceUniform			//InstancedMesh extension
 
+
 		};
+
+		console.log( material.instanceTransform );
+
+		console.log(parameters);
 
 		return parameters;
 
@@ -271,7 +271,7 @@ function WebGLPrograms( renderer, capabilities ) {
 
 		if ( program === undefined ) {
 
-			program = new WebGLProgram( renderer, code, material, parameters );
+			program = new THREE.WebGLProgram( renderer, code, material, parameters );
 			programs.push( program );
 
 		}
@@ -301,4 +301,4 @@ function WebGLPrograms( renderer, capabilities ) {
 
 }
 
-}
+};

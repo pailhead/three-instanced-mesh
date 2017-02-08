@@ -19,7 +19,7 @@ module.exports = [
 
   "float b21 = a21 * a10 - a11 * a20;",
 
-  "float det = a00 * b01 + a01 * b11 + a02 * b21;"
+  "float det = a00 * b01 + a01 * b11 + a02 * b21;",
 
   "return mat3(b01, (-a22 * a01 + a02 * a21), (a12 * a01 - a02 * a11),",
 

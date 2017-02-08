@@ -1,19 +1,20 @@
-module.exports = function(THREE){
+
+module.exports = function( THREE ){
 
 var oldProto = THREE.Material.prototype;
+
+
 
 /**
  * @author mrdoob / http://mrdoob.com/
  * @author alteredq / http://alteredqualia.com/
  */
 
-var materialId = 0;
-
 THREE.Material = function () {
 
-	Object.defineProperty( this, 'id', { value: materialId ++ } );
+	Object.defineProperty( this, 'id', { value: THREE.MaterialIdCount ++ } );
 
-	this.uuid = _Math.generateUUID();
+	this.uuid = THREE.Math.generateUUID();
 
 	this.name = '';
 	this.type = 'Material';
@@ -21,27 +22,26 @@ THREE.Material = function () {
 	this.fog = true;
 	this.lights = true;
 
-	this.blending = NormalBlending;
-	this.side = FrontSide;
-	this.shading = SmoothShading; // THREE.FlatShading, THREE.SmoothShading
-	this.vertexColors = NoColors; // THREE.NoColors, THREE.VertexColors, THREE.FaceColors
+	this.blending = THREE.NormalBlending;
+	this.side = THREE.FrontSide;
+	this.shading = THREE.SmoothShading; // THREE.FlatShading, THREE.SmoothShading
+	this.vertexColors = THREE.NoColors; // THREE.NoColors, THREE.VertexColors, THREE.FaceColors
 
 	this.opacity = 1;
 	this.transparent = false;
 
-	this.blendSrc = SrcAlphaFactor;
-	this.blendDst = OneMinusSrcAlphaFactor;
-	this.blendEquation = AddEquation;
+	this.blendSrc = THREE.SrcAlphaFactor;
+	this.blendDst = THREE.OneMinusSrcAlphaFactor;
+	this.blendEquation = THREE.AddEquation;
 	this.blendSrcAlpha = null;
 	this.blendDstAlpha = null;
 	this.blendEquationAlpha = null;
 
-	this.depthFunc = LessEqualDepth;
+	this.depthFunc = THREE.LessEqualDepth;
 	this.depthTest = true;
 	this.depthWrite = true;
 
 	this.clippingPlanes = null;
-	this.clipIntersection = false;
 	this.clipShadows = false;
 
 	this.colorWrite = true;
@@ -61,13 +61,16 @@ THREE.Material = function () {
 
 	this._needsUpdate = true;
 
-	// InstancedMesh extension
 	this.instanceTransform = false;
 	this.instanceUniform = false;
 
 };
 
+// Object.assign( THREE.Material.prototype, THREE.EventDispatcher.prototype );
+
+THREE.MaterialIdCount = 0;
+
+
 THREE.Material.prototype = oldProto;
 
 }
-

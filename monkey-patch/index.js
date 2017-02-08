@@ -1,16 +1,18 @@
-module.exports = function( THREE , monkeyPatch ){
+module.exports = function( THREE ){
 
-	if( monkeyPatch ) return;
+	//patches these methods and shader chunks with the required logic 
 
-	require('./WebGLProgram.js')(THREE);
-	require('./WebGLPrograms.js')(THREE);
 	require('./Material.js')(THREE);
+
+	THREE.WebGLProgram = 	require('./WebGLProgram.js')(THREE);  //adds correct define
+	THREE.WebGLPrograms =	require('./WebGLPrograms.js')(THREE);
+
 	require('./WebGLShadowMap.js')(THREE);
 
-	THREE.ShaderChunk[ 'beginnormal_vertex' ] = 		require('./beginnormal_vertex.glsl.js'); 
-	THREE.ShaderChunk[ 'common' ] = 					require('./common.glsl.js'); 
+	THREE.ShaderChunk[ 'begin_vertex' ] = 				require('./begin_vertex.glsl.js'); 
 	THREE.ShaderChunk[ 'defaultnormal_vertex' ] = 		require('./defaultnormal_vertex.glsl.js');
 
-	return THREE;
-
+	//this one is appended
+	THREE.ShaderChunk[ 'common' ] += 					require('./common.glsl.js'); 
+	
 }

@@ -1,78 +1,89 @@
-module.exports = function( THREE ){
-
 /**
-* @author alteredq / http://alteredqualia.com/
-* @author mrdoob / http://mrdoob.com/
-*/
-THREE.WebGLShadowMap = function( _renderer, _lights, _objects, capabilities ) {
+ * @author alteredq / http://alteredqualia.com/
+ * @author mrdoob / http://mrdoob.com/
+ */
 
+module.exports = function(THREE){ 
+
+THREE.WebGLShadowMap = function ( _renderer, _lights, _objects ) {
+
+	console.log( '[INSTANCE_MESH] patch WebGLShadowMap' );
+	
 	var _gl = _renderer.context,
 	_state = _renderer.state,
-	_frustum = new Frustum(),
-	_projScreenMatrix = new Matrix4(),
+	_frustum = new THREE.Frustum(),
+	_projScreenMatrix = new THREE.Matrix4(),
 
 	_lightShadows = _lights.shadows,
 
-	_shadowMapSize = new Vector2(),
-	_maxShadowMapSize = new Vector2( capabilities.maxTextureSize, capabilities.maxTextureSize ),
+	_shadowMapSize = new THREE.Vector2(),
 
-	_lookTarget = new Vector3(),
-	_lightPositionWorld = new Vector3(),
+	_lookTarget = new THREE.Vector3(),
+	_lightPositionWorld = new THREE.Vector3(),
 
 	_renderList = [],
 
 	_MorphingFlag = 1,
 	_SkinningFlag = 2,
+	_ph_InstanceFlag = 4,
 
-	
-	_InstancingFlag = 4, //InstancedMesh extension
+	// _NumberOfMaterialVariants = ( _MorphingFlag | _SkinningFlag ) + 1,
+	_NumberOfMaterialVariants = ( _MorphingFlag | _SkinningFlag | _ph_InstanceFlag ) + 1,
 
-	_NumberOfMaterialVariants = ( _MorphingFlag | _SkinningFlag | _InstancingFlag ) + 1, //instanceMesh extension
 
 	_depthMaterials = new Array( _NumberOfMaterialVariants ),
 	_distanceMaterials = new Array( _NumberOfMaterialVariants ),
 
 	_materialCache = {};
 
+	console.log( _NumberOfMaterialVariants , 'numvar' , _MorphingFlag , _SkinningFlag);
+
 	var cubeDirections = [
-		new Vector3( 1, 0, 0 ), new Vector3( - 1, 0, 0 ), new Vector3( 0, 0, 1 ),
-		new Vector3( 0, 0, - 1 ), new Vector3( 0, 1, 0 ), new Vector3( 0, - 1, 0 )
+		new THREE.Vector3( 1, 0, 0 ), new THREE.Vector3( - 1, 0, 0 ), new THREE.Vector3( 0, 0, 1 ),
+		new THREE.Vector3( 0, 0, - 1 ), new THREE.Vector3( 0, 1, 0 ), new THREE.Vector3( 0, - 1, 0 )
 	];
 
 	var cubeUps = [
-		new Vector3( 0, 1, 0 ), new Vector3( 0, 1, 0 ), new Vector3( 0, 1, 0 ),
-		new Vector3( 0, 1, 0 ), new Vector3( 0, 0, 1 ),	new Vector3( 0, 0, - 1 )
+		new THREE.Vector3( 0, 1, 0 ), new THREE.Vector3( 0, 1, 0 ), new THREE.Vector3( 0, 1, 0 ),
+		new THREE.Vector3( 0, 1, 0 ), new THREE.Vector3( 0, 0, 1 ),	new THREE.Vector3( 0, 0, - 1 )
 	];
 
 	var cube2DViewPorts = [
-		new Vector4(), new Vector4(), new Vector4(),
-		new Vector4(), new Vector4(), new Vector4()
+		new THREE.Vector4(), new THREE.Vector4(), new THREE.Vector4(),
+		new THREE.Vector4(), new THREE.Vector4(), new THREE.Vector4()
 	];
 
 	// init
 
-	var depthMaterialTemplate = new MeshDepthMaterial();
-	depthMaterialTemplate.depthPacking = RGBADepthPacking;
+	var depthMaterialTemplate = new THREE.MeshDepthMaterial();
+	depthMaterialTemplate.depthPacking = THREE.RGBADepthPacking;
 	depthMaterialTemplate.clipping = true;
 
-	var distanceShader = ShaderLib[ "distanceRGBA" ];
-	var distanceUniforms = UniformsUtils.clone( distanceShader.uniforms );
+	// var depthMaterialTemplateInstanced;
+
+	var distanceShader = THREE.ShaderLib[ "distanceRGBA" ];
+	var distanceUniforms = THREE.UniformsUtils.clone( distanceShader.uniforms );
 
 	for ( var i = 0; i !== _NumberOfMaterialVariants; ++ i ) {
 
 		var useMorphing = ( i & _MorphingFlag ) !== 0;
 		var useSkinning = ( i & _SkinningFlag ) !== 0;
-		var useInstancing = ( i & _InstancingFlag ) !== 0; //InstancedMesh extension
+		var _ph_UseInstancing = ( i & _ph_InstanceFlag ) !== 0;
+		// console.log( `=` );
+		// console.log( i & _MorphingFlag );
+		// console.log( i & _SkinningFlag );
+		// console.log( i & _ph_InstanceFlag , _ph_UseInstancing);
 
 		var depthMaterial = depthMaterialTemplate.clone();
 		depthMaterial.morphTargets = useMorphing;
 		depthMaterial.skinning = useSkinning;
-
-		depthMaterial.instanceTransform = useInstancing; //InstancedMesh extension, not needed to figure out scale since no normals in depth?
+		depthMaterial.instanceTransform = _ph_UseInstancing;
 
 		_depthMaterials[ i ] = depthMaterial;
 
-		var distanceMaterial = new ShaderMaterial( {
+		// console.log( depthMaterial );
+
+		var distanceMaterial = new THREE.ShaderMaterial( {
 			defines: {
 				'USE_SHADOWMAP': ''
 			},
@@ -81,8 +92,8 @@ THREE.WebGLShadowMap = function( _renderer, _lights, _objects, capabilities ) {
 			fragmentShader: distanceShader.fragmentShader,
 			morphTargets: useMorphing,
 			skinning: useSkinning,
-			clipping: true,
-			instanceTransform: useInstancing //InstancedMesh extension
+			// instanceTransform: _ph_UseInstancing,
+			clipping: true
 		} );
 
 		_distanceMaterials[ i ] = distanceMaterial;
@@ -98,7 +109,7 @@ THREE.WebGLShadowMap = function( _renderer, _lights, _objects, capabilities ) {
 	this.autoUpdate = true;
 	this.needsUpdate = false;
 
-	this.type = PCFShadowMap;
+	this.type = THREE.PCFShadowMap;
 
 	this.renderReverseSided = true;
 	this.renderSingleSided = true;
@@ -111,7 +122,7 @@ THREE.WebGLShadowMap = function( _renderer, _lights, _objects, capabilities ) {
 		if ( _lightShadows.length === 0 ) return;
 
 		// Set GL state for depth map.
-		_state.buffers.color.setClear( 1, 1, 1, 1 );
+		_state.clearColor( 1, 1, 1, 1 );
 		_state.disable( _gl.BLEND );
 		_state.setDepthTest( true );
 		_state.setScissorTest( false );
@@ -135,9 +146,8 @@ THREE.WebGLShadowMap = function( _renderer, _lights, _objects, capabilities ) {
 			var shadowCamera = shadow.camera;
 
 			_shadowMapSize.copy( shadow.mapSize );
-			_shadowMapSize.min( _maxShadowMapSize );
 
-			if ( light && light.isPointLight ) {
+			if ( light instanceof THREE.PointLight ) {
 
 				faceCount = 6;
 				isPointLight = true;
@@ -183,23 +193,15 @@ THREE.WebGLShadowMap = function( _renderer, _lights, _objects, capabilities ) {
 
 			if ( shadow.map === null ) {
 
-				var pars = { minFilter: NearestFilter, magFilter: NearestFilter, format: RGBAFormat };
+				var pars = { minFilter: THREE.NearestFilter, magFilter: THREE.NearestFilter, format: THREE.RGBAFormat };
 
-				shadow.map = new WebGLRenderTarget( _shadowMapSize.x, _shadowMapSize.y, pars );
-				shadow.map.texture.name = light.name + ".shadowMap";
+				shadow.map = new THREE.WebGLRenderTarget( _shadowMapSize.x, _shadowMapSize.y, pars );
 
 				shadowCamera.updateProjectionMatrix();
 
 			}
 
-			if ( shadow.isSpotLightShadow ) {
-
-				shadow.update( light );
-
-			}
-
-			// TODO (abelnation / sam-g-steel): is this needed?
-			if ( shadow && shadow.isRectAreaLightShadow ) {
+			if ( shadow instanceof THREE.SpotLightShadow ) {
 
 				shadow.update( light );
 
@@ -271,7 +273,7 @@ THREE.WebGLShadowMap = function( _renderer, _lights, _objects, capabilities ) {
 					var geometry = _objects.update( object );
 					var material = object.material;
 
-					if ( material && material.isMultiMaterial ) {
+					if ( material instanceof THREE.MultiMaterial ) {
 
 						var groups = geometry.groups;
 						var materials = material.materials;
@@ -304,8 +306,8 @@ THREE.WebGLShadowMap = function( _renderer, _lights, _objects, capabilities ) {
 		}
 
 		// Restore GL state.
-		var clearColor = _renderer.getClearColor();
-		var clearAlpha = _renderer.getClearAlpha();
+		var clearColor = _renderer.getClearColor(),
+		clearAlpha = _renderer.getClearAlpha();
 		_renderer.setClearColor( clearColor, clearAlpha );
 
 		scope.needsUpdate = false;
@@ -313,7 +315,6 @@ THREE.WebGLShadowMap = function( _renderer, _lights, _objects, capabilities ) {
 	};
 
 	function getDepthMaterial( object, material, isPointLight, lightPositionWorld ) {
-
 		var geometry = object.geometry;
 
 		var result = null;
@@ -330,31 +331,18 @@ THREE.WebGLShadowMap = function( _renderer, _lights, _objects, capabilities ) {
 
 		if ( ! customMaterial ) {
 
-			var useMorphing = false;
+			var useMorphing = geometry.morphTargets !== undefined &&
+					geometry.morphTargets.length > 0 && material.morphTargets;
 
-			if ( material.morphTargets ) {
+			var useSkinning = object instanceof THREE.SkinnedMesh && material.skinning;
 
-				if ( geometry && geometry.isBufferGeometry ) {
-
-					useMorphing = geometry.morphAttributes && geometry.morphAttributes.position && geometry.morphAttributes.position.length > 0;
-
-				} else if ( geometry && geometry.isGeometry ) {
-
-					useMorphing = geometry.morphTargets && geometry.morphTargets.length > 0;
-
-				}
-
-			}
-
-			var useSkinning = object.isSkinnedMesh && material.skinning;
-
-			var useInstancing = material.instanceTransform; //InstancedMesh extension
+			var _ph_useInstancing = material.instanceTransform;
 
 			var variantIndex = 0;
 
 			if ( useMorphing ) variantIndex |= _MorphingFlag;
 			if ( useSkinning ) variantIndex |= _SkinningFlag;
-			if ( useInstancing ) variantIndex |= _InstancingFlag;  //InstancedMesh extension
+			if ( _ph_useInstancing ) variantIndex |= _ph_InstanceFlag;
 
 			result = materialVariants[ variantIndex ];
 
@@ -400,16 +388,16 @@ THREE.WebGLShadowMap = function( _renderer, _lights, _objects, capabilities ) {
 
 		var side = material.side;
 
-		if ( scope.renderSingleSided && side == DoubleSide ) {
+		if ( scope.renderSingleSided && side == THREE.DoubleSide ) {
 
-			side = FrontSide;
+			side = THREE.FrontSide;
 
 		}
 
 		if ( scope.renderReverseSided ) {
 
-			if ( side === FrontSide ) side = BackSide;
-			else if ( side === BackSide ) side = FrontSide;
+			if ( side === THREE.FrontSide ) side = THREE.BackSide;
+			else if ( side === THREE.BackSide ) side = THREE.FrontSide;
 
 		}
 
@@ -435,9 +423,7 @@ THREE.WebGLShadowMap = function( _renderer, _lights, _objects, capabilities ) {
 
 		if ( object.visible === false ) return;
 
-		var visible = ( object.layers.mask & camera.layers.mask ) !== 0;
-
-		if ( visible && ( object.isMesh || object.isLine || object.isPoints ) ) {
+		if ( object.layers.test( camera.layers ) && ( object instanceof THREE.Mesh || object instanceof THREE.Line || object instanceof THREE.Points ) ) {
 
 			if ( object.castShadow && ( object.frustumCulled === false || _frustum.intersectsObject( object ) === true ) ) {
 
@@ -464,6 +450,6 @@ THREE.WebGLShadowMap = function( _renderer, _lights, _objects, capabilities ) {
 
 	}
 
-}
+};
 
 }

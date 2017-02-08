@@ -16,9 +16,9 @@ function InstancedDistributedGeometry (
 
 }
 
-InstancedDistributedGeometry.prototype = Object.create( InstancedBufferGeometry.prototype );
+InstancedDistributedGeometry.prototype = Object.create( THREE.InstancedBufferGeometry.prototype );
 
-InstancedDistributedGeometry.constructor = THREE.InstancedDistributedGeometry;
+InstancedDistributedGeometry.constructor = InstancedDistributedGeometry;
 
 InstancedDistributedGeometry.prototype.fromGeometry = function( regularGeometry , numCopies , distributeFunction ){
 

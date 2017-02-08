@@ -39,9 +39,9 @@ The class will run the "placement function" during construction transforming an 
 
 # Usage
 
-```
-npm install three-instanced-mesh --save
-```
+
+[![NPM](https://nodei.co/npm/three-instanced-mesh.png)](https://npmjs.org/package/three-instanced-mesh)
+
 ```javascript
 
 var InstancedMesh = require('three-instanced-mesh')( THREE ); //make sure that the version of THREE provided matches the one from the patch

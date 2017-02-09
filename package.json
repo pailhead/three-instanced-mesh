@@ -1,6 +1,6 @@
 {
   "name": "three-instanced-mesh",
-  "version": "85.1.0",
+  "version": "85.2.0",
   "description": "Scene graph level abstraction for three.js InstancedBufferGeometry",
   "main": "index.js",
   "directories": {

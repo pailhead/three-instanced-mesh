@@ -39,7 +39,7 @@ It will consume additional three 'v4' attributes. ( rotation is in xyz , transla
 # NOTE 
 
 Just include it and it should work :)
-~~this works only on r78, see this [pull request](https://github.com/mrdoob/three.js/pull/10750) for discussion, and this [fork](https://github.com/pailhead/three.js/tree/InstancedMesh) if you want to build it for r84 **and have shadows enabled**. Otherwise, including this once will patch the provided instance of three and you'll have `THREE.InstancedMesh` available as a constructor. ~~
+
 
 # Usage
 

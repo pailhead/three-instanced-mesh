@@ -12,7 +12,7 @@ So for example, if you have static world assets that need to be scattered, you c
 
 # how it works
 
-Including the module once will allow the usage of `THREE.InstancedMesh` constructor, it should also patch three different shader chunks to attach the instancing logic. It's possible to trigger these defines from outside, but the depth materials are still buried in `THREE.WebGLShadows`. 
+Including the module once will allow the usage of `THREE.InstancedMesh` constructor, it should also patch three different shader chunks to attach the instancing logic. It's possible to trigger these defines from outside, ~~but the depth materials are still buried in `THREE.WebGLShadows`.~~ Absolute w00tness, three.js already has a mechanism in plase that allows for something like this to be done without hacking! :)
 
 The module contains a monkey patch that modifies the following three.js classes:
 
@@ -38,7 +38,8 @@ It will consume additional three 'v4' attributes. ( rotation is in xyz , transla
 
 # NOTE 
 
-~~this works only on r78~~, see this [pull request](https://github.com/mrdoob/three.js/pull/10750) for discussion, and this [fork](https://github.com/pailhead/three.js/tree/InstancedMesh) if you want to build it for r84 **and have shadows enabled**. Otherwise, including this once will patch the provided instance of three and you'll have `THREE.InstancedMesh` available as a constructor. 
+Just include it and it should work :)
+~~this works only on r78, see this [pull request](https://github.com/mrdoob/three.js/pull/10750) for discussion, and this [fork](https://github.com/pailhead/three.js/tree/InstancedMesh) if you want to build it for r84 **and have shadows enabled**. Otherwise, including this once will patch the provided instance of three and you'll have `THREE.InstancedMesh` available as a constructor. ~~
 
 # Usage
 

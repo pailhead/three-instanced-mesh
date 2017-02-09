@@ -1,13 +1,13 @@
 
 //define a mat3 inverse function if instance transform is used
 
-module.exports = [
+var chunkSet = false;
 
-"#ifdef USE_COLOR",
+module.exports = function(THREE){
 
-"  varying vec3 vColor;",
+if( chunkSet ) return THREE.ShaderChunk['uv_pars_vertex'];
 
-"#endif",
+var chunk = [
 
 "#ifdef INSTANCE_TRANSFORM",
 
@@ -40,7 +40,13 @@ module.exports = [
 'attribute vec4 aTRS2;',   //InstancedMesh extension 
 // 'attribute vec4 aTRS3;',   //InstancedMesh extension 
 
-
 "#endif"
 
+
 ].join("\n");
+
+THREE.ShaderChunk['uv_pars_vertex'] += chunk;
+
+console.log( THREE.ShaderChunk['uv_pars_vertex'] );
+
+}

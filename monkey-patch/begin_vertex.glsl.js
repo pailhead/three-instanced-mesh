@@ -1,3 +1,8 @@
+/**************************
+ * Dusan Bosnjak @pailhead
+ **************************/
+
+
 // transform vertices with the transform matrix
 
 // think there may have been a race condition somewhere with the definition
@@ -14,6 +19,8 @@ module.exports = [
 "	#ifndef INSTANCE_TRANSFORM_DEFINED",
 
 "	mat4 aTRS = mat4(",
+
+//format it so that we dont waste a whole attribute
 
 "		vec4( aTRS0.xyz , 0.),",
 "		vec4( aTRS1.xyz , 0.),",

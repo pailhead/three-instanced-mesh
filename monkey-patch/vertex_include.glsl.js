@@ -1,10 +1,14 @@
+/**************************
+ * Dusan Bosnjak @pailhead
+ **************************/
+
 
 //define a mat3 inverse function if instance transform is used
-
 var chunkSet = false;
 
 module.exports = function(THREE){
 
+//this one seems the most convenient since its present in the depth shader because of displacement most likely
 if( chunkSet ) return THREE.ShaderChunk['uv_pars_vertex'];
 
 var chunk = [
@@ -35,10 +39,10 @@ var chunk = [
 "}",
 
 
-'attribute vec4 aTRS0;',   //InstancedMesh extension 
-'attribute vec4 aTRS1;',   //InstancedMesh extension 
-'attribute vec4 aTRS2;',   //InstancedMesh extension 
-// 'attribute vec4 aTRS3;',   //InstancedMesh extension 
+'attribute vec4 aTRS0;',
+'attribute vec4 aTRS1;',  
+'attribute vec4 aTRS2;',
+// 'attribute vec4 aTRS3;',   //no more need for this
 
 "#endif"
 
@@ -46,7 +50,5 @@ var chunk = [
 ].join("\n");
 
 THREE.ShaderChunk['uv_pars_vertex'] += chunk;
-
-console.log( THREE.ShaderChunk['uv_pars_vertex'] );
 
 }

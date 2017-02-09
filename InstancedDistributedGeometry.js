@@ -1,4 +1,7 @@
-
+/**************************
+ * Dusan Bosnjak @pailhead
+ **************************/
+ 
 module.exports = function( THREE ){
 
 function InstancedDistributedGeometry (

@@ -1,3 +1,7 @@
+/**************************
+ * Dusan Bosnjak @pailhead
+ **************************/
+
 module.exports = function ( THREE ){
 
 	if( /InstancedMesh/.test( THREE.REVISION ) ) return THREE;

@@ -1,3 +1,7 @@
+/**************************
+ * Dusan Bosnjak @pailhead
+ **************************/
+
 module.exports = [
 
 "#ifdef FLIP_SIDED",

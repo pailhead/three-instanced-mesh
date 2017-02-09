@@ -1,7 +1,7 @@
-/**
+/**************************
  * Dusan Bosnjak @pailhead
- */
-
+ **************************/
+ 
 module.exports = function( THREE ){
 
 //monkeypatch shaders

@@ -12,48 +12,44 @@ So for example, if you have static world assets that need to be scattered, you c
 
 # how it works
 
-In order for this class to work with the shaders from the default materials as well as shadows a few classes in the `THREE.WebGLRenderer` need to be modified. Some shader chunks need to be extended, but the logic is contained by the preprocessor, so unless a `#INSTANCE_TRANSFORM` define is made, the shaders will act as if this effect is not present. ~~The only way to trigger this define in the shaders for the default materials is to modify a few internal functions to the renderer.~~ It's possible to trigger these defines from outside, but the depth materials are still buried in `THREE.WebGLShadows`.
+Including the module once will allow the usage of `THREE.InstancedMesh` constructor, it should also patch three different shader chunks to attach the instancing logic. It's possible to trigger these defines from outside, but the depth materials are still buried in `THREE.WebGLShadows`. 
 
-That being said... the module contains a monkey patch that modifies the following three.js classes:
-- ~~**THREE.Material**~~
+The module contains a monkey patch that modifies the following three.js classes:
 
-  turns out that all materials can have custom defines, can be hacked easier
+ 
 
-  ~~adds two flags `instanceTransform` and `instanceUniform` that control the two defines to be made for the shader~~
+- **color_pars_vertex.glsl**
   
-- ~~**THREE.WebGLProgram**~~
+  odd but this is the most convenient place to include stuff in the vertex shader outside of main()
 
-  ~~this is where the defines are actually defined along with the TRS attribute matrix~~
+- **defaultnormal_vertex.glsl** 
+
+  normal transformation, this is where the optimization can occur if the scale is uniform
+
+- **begin_vertex.glsl**
+
+  vertex transformation
   
-- ~~**THREE.WebGLPrograms**~~
-
-  ~~this plucks the parameters needed for the program~~
-
-- **THREE.ShadowMap**
-  
-  additional material variants are created for the cache with the instance defined (not sure though if we want to instance skinned stuff)
-
-- **~~common.glsl~~(color_pars_vertex is more convenient), defaultnormal_vertex.glsl , begin_vertex.glsl**
-
-  are chunks that contain the instancing logic, and a mat3 inverse function that gets defined only in materials that have `instanceTransform` set to true
+**TODO:** make a class that attaches the functionality to a provided material.
 
 The class will run the "placement function" during construction transforming an internal `Object3D` node and writing the TRS matrix into an attribute buffer N times. It will convert the provided `THREE.BufferGeometry` into a `THREE.InstancedBufferGeometry` and attach the additional attribute. The result is an `InstancedMesh` class (extends `Mesh`) with an `InstancedDistributedGeometry` class (extends `InstancedBufferGeometry`). This can then be treated as one object as far as rendering is concerned. A different structure can describe colliders for example and could be constructed in the placement function.  
 
+It will consume additional three 'v4' attributes. ( rotation is in xyz , translation in w ).
+
 # NOTE 
 
-this works only on r78, see this [pull request](https://github.com/mrdoob/three.js/pull/10750) for discussion, and this [fork](https://github.com/pailhead/three.js/tree/InstancedMesh) if you want to build it for r84.
+~~this works only on r78~~, see this [pull request](https://github.com/mrdoob/three.js/pull/10750) for discussion, and this [fork](https://github.com/pailhead/three.js/tree/InstancedMesh) if you want to build it for r84 **and have shadows enabled**. Otherwise, including this once will patch the provided instance of three and you'll have `THREE.InstancedMesh` available as a constructor. 
 
 # Usage
-
 
 [![NPM](https://nodei.co/npm/three-instanced-mesh.png)](https://npmjs.org/package/three-instanced-mesh)
 
 ```javascript
 
-//no longer needed, shadows dont work though
-//require(../../node_modules/three-instanced-mesh/monkey-patch.js)(THREE); //you have to run this file if you want default materials to work, and your threejs version has to be 78
+//var InstancedMesh = require('three-instanced-mesh')( THREE ); //should replace shaders on first call
 
-var InstancedMesh = require('three-instanced-mesh')( THREE ); //should replace shaders on first call
+//or just patch three
+require( 'three-instanced-mesh' )(THREE);
 
 var boxGeometry = new THREE.BoxBufferGeometry(2,2,2,1,1,1);
 var material = new THREE.MeshPhongMaterial();

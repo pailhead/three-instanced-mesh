@@ -9,6 +9,8 @@ module.exports = function( THREE ){
 	THREE.ShaderChunk[ 'defaultnormal_vertex' ] = 		require('./defaultnormal_vertex.glsl.js');
 
 	//piggy back on this one as it seems its included in all the materials except depth
-	THREE.ShaderChunk[ 'color_pars_vertex' ] = require('./vertex_include.glsl.js'); 
+	// THREE.ShaderChunk[ 'color_pars_vertex' ] = require('./vertex_include.glsl.js'); 
+
+	require('./vertex_include.glsl.js')(THREE); 
 	
 }

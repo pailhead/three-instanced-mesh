@@ -6,7 +6,7 @@ module.exports = [
 
 "#ifndef INSTANCE_TRANSFORM",
 
-"vec3 transformed = vec3( pofsition );",
+"vec3 transformed = vec3( position );",
 
 "#else",
 

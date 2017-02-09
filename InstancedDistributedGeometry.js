@@ -41,8 +41,8 @@ InstancedDistributedGeometry.prototype.fromGeometry = function( regularGeometry 
 		var orientationMatrices = [
 			new THREE.InstancedBufferAttribute( new Float32Array( numCopies * 4 ), 4, 1 ),
 			new THREE.InstancedBufferAttribute( new Float32Array( numCopies * 4 ), 4, 1 ),
-			new THREE.InstancedBufferAttribute( new Float32Array( numCopies * 4 ), 4, 1 ),
 			new THREE.InstancedBufferAttribute( new Float32Array( numCopies * 4 ), 4, 1 )
+			// new THREE.InstancedBufferAttribute( new Float32Array( numCopies * 4 ), 4, 1 ) //pack T into w component
 		];
 
 		for ( var clone = 0 ; clone < numCopies ; clone ++ ){
@@ -63,7 +63,7 @@ InstancedDistributedGeometry.prototype.fromGeometry = function( regularGeometry 
 
 		}
 
-		for ( var i = 0 ; i < 4 ; i ++ ){
+		for ( var i = 0 ; i < 3 ; i ++ ){
 
 			this.addAttribute( 'aTRS' + i , orientationMatrices[i] );
 
@@ -78,15 +78,19 @@ function _copyMat4IntoAttributes( index , mat4 , attributeArray ){
 
 	index = index << 2;
 
-	for ( var r = 0 ; r < 4 ; r ++ ){
+	for ( var r = 0 ; r < 3 ; r ++ ){
 
 		var row = r << 2;
 
-		for ( var c = 0 ; c < 4 ; c ++ ){
+		for ( var c = 0 ; c < 3 ; c ++ ){
 			
 			attributeArray[r].array[ index + c ] = mat4.elements[ row + c ];
 
 		}
+
+		row = 3 << 2;
+
+		attributeArray[r].array[ index + 3 ] = mat4.elements[ row + r ]; //read last row as column
 
 	}
 

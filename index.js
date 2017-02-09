@@ -1,8 +1,12 @@
 /**
- * @pailhead
+ * Dusan Bosnjak @pailhead
  */
 
 module.exports = function( THREE ){
+
+//monkeypatch shaders
+
+require('./monkey-patch.js')(THREE);
 
 var InstancedDistributedGeometry = require('./InstancedDistributedGeometry')(THREE);
 
@@ -10,11 +14,16 @@ function InstancedMesh ( geometry , material , distributeFunction , numCopies , 
 
 	THREE.Mesh.call( this , new InstancedDistributedGeometry( geometry , numCopies , distributeFunction , disposeRegular ) , material.clone() );
 
-	this.material.instanceTransform = true;
+	this.material.defines = {
 
-	this.material.instanceUniform = undefined !== uniformScale ? uniformScale : false;
+		INSTANCE_TRANSFORM: ""
 
-	this.frustumCulled = false;
+	};
+ 	
+ 	if( undefined !== uniformScale && uniformScale )
+		this.material.defines.INSTANCE_UNIFORM = true;
+
+	this.frustumCulled = false; //you can uncheck this if you generate your own bounding info
 
 }
 

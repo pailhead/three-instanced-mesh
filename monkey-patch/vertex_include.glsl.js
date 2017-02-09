@@ -3,7 +3,13 @@
 
 module.exports = [
 
-"\n#ifdef INSTANCE_TRANSFORM",
+"#ifdef USE_COLOR",
+
+"  varying vec3 vColor;",
+
+"#endif",
+
+"#ifdef INSTANCE_TRANSFORM",
 
 "mat3 inverse(mat3 m) {",
 
@@ -28,6 +34,13 @@ module.exports = [
               "b21, (-a21 * a00 + a01 * a20), (a11 * a00 - a01 * a10)) / det;",
 "}",
 
-"#endif\n"
+
+'attribute vec4 aTRS0;',   //InstancedMesh extension 
+'attribute vec4 aTRS1;',   //InstancedMesh extension 
+'attribute vec4 aTRS2;',   //InstancedMesh extension 
+// 'attribute vec4 aTRS3;',   //InstancedMesh extension 
+
+
+"#endif"
 
 ].join("\n");

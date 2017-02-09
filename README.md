@@ -35,13 +35,15 @@ That being said... the module contains a monkey patch that modifies the followin
 
 - **~~common.glsl~~(color_pars_vertex is more convenient), defaultnormal_vertex.glsl , begin_vertex.glsl**
 
-  are chunks that contain the instancing logic, and a mat3 inverse function that gets defined only in materials that have `instanceTransform` set to true
+  are chunks that contain the instancing logic, and a mat3 inverse function that gets defined ~~only in materials that have `instanceTransform` set to true~~ only in materials passed to the mesh. **TODO:** make a class that attaches the functionality to a provided material.
 
 The class will run the "placement function" during construction transforming an internal `Object3D` node and writing the TRS matrix into an attribute buffer N times. It will convert the provided `THREE.BufferGeometry` into a `THREE.InstancedBufferGeometry` and attach the additional attribute. The result is an `InstancedMesh` class (extends `Mesh`) with an `InstancedDistributedGeometry` class (extends `InstancedBufferGeometry`). This can then be treated as one object as far as rendering is concerned. A different structure can describe colliders for example and could be constructed in the placement function.  
 
+It will consume additional three 'v4' attributes.
+
 # NOTE 
 
-this works only on r78, see this [pull request](https://github.com/mrdoob/three.js/pull/10750) for discussion, and this [fork](https://github.com/pailhead/three.js/tree/InstancedMesh) if you want to build it for r84.
+~~this works only on r78~~, see this [pull request](https://github.com/mrdoob/three.js/pull/10750) for discussion, and this [fork](https://github.com/pailhead/three.js/tree/InstancedMesh) if you want to build it for r84 **and have shadows enabled**. Otherwise, including this once will patch the provided instance of three and you'll have `THREE.InstancedMesh` available as a constructor. 
 
 # Usage
 

@@ -12,26 +12,28 @@ So for example, if you have static world assets that need to be scattered, you c
 
 # how it works
 
-In order for this class to work with the shaders from the default materials as well as shadows a few classes in the `THREE.WebGLRenderer` need to be modified. Some shader chunks need to be extended, but the logic is contained by the preprocessor, so unless a `#INSTANCE_TRANSFORM` define is made, the shaders will act as if this effect is not present. The only way to trigger this define in the shaders for the default materials is to modify a few internal functions to the renderer.
+In order for this class to work with the shaders from the default materials as well as shadows a few classes in the `THREE.WebGLRenderer` need to be modified. Some shader chunks need to be extended, but the logic is contained by the preprocessor, so unless a `#INSTANCE_TRANSFORM` define is made, the shaders will act as if this effect is not present. ~~The only way to trigger this define in the shaders for the default materials is to modify a few internal functions to the renderer.~~ It's possible to trigger these defines from outside, but the depth materials are still buried in `THREE.WebGLShadows`.
 
 That being said... the module contains a monkey patch that modifies the following three.js classes:
-- **THREE.Material**
+- ~~**THREE.Material**~~
 
-  adds two flags `instanceTransform` and `instanceUniform` that control the two defines to be made for the shader
+  turns out that all materials can have custom defines, can be hacked easier
+
+  ~~adds two flags `instanceTransform` and `instanceUniform` that control the two defines to be made for the shader~~
   
-- **THREE.WebGLProgram**
+- ~~**THREE.WebGLProgram**~~
 
-  this is where the defines are actually defined along with the TRS attribute matrix
+  ~~this is where the defines are actually defined along with the TRS attribute matrix~~
   
-- **THREE.WebGLPrograms** 
+- ~~**THREE.WebGLPrograms**~~
 
-  this plucks the parameters needed for the program
+  ~~this plucks the parameters needed for the program~~
 
 - **THREE.ShadowMap**
   
   additional material variants are created for the cache with the instance defined (not sure though if we want to instance skinned stuff)
 
-- **common.glsl , defaultnormal_vertex.glsl , begin_vertex.glsl**
+- **~~common.glsl~~(color_pars_vertex is more convenient), defaultnormal_vertex.glsl , begin_vertex.glsl**
 
   are chunks that contain the instancing logic, and a mat3 inverse function that gets defined only in materials that have `instanceTransform` set to true
 
@@ -48,9 +50,10 @@ this works only on r78, see this [pull request](https://github.com/mrdoob/three.
 
 ```javascript
 
-require(../../node_modules/three-instanced-mesh/monkey-patch.js)(THREE); //you have to run this file if you want default materials to work, and your threejs version has to be 78
+//no longer needed, shadows dont work though
+//require(../../node_modules/three-instanced-mesh/monkey-patch.js)(THREE); //you have to run this file if you want default materials to work, and your threejs version has to be 78
 
-var InstancedMesh = require('three-instanced-mesh')( THREE ); 
+var InstancedMesh = require('three-instanced-mesh')( THREE ); //should replace shaders on first call
 
 var boxGeometry = new THREE.BoxBufferGeometry(2,2,2,1,1,1);
 var material = new THREE.MeshPhongMaterial();

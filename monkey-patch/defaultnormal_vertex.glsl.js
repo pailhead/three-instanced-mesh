@@ -16,7 +16,10 @@ module.exports = [
 
 "mat4 aTRS = mat4(",
 
-	"aTRS0,aTRS1,aTRS2,aTRS3",
+	"vec4( aTRS0.xyz , 0.),",
+	"vec4( aTRS1.xyz , 0.),",
+	"vec4( aTRS2.xyz , 0.),",
+	"vec4( aTRS0.w , aTRS1.w , aTRS2.w , 1.)",
 
 ");",
 

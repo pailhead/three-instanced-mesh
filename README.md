@@ -41,36 +41,5 @@ var cluster = new THREE.InstancedMesh( boxGeometry , material , //this is the sa
 
 scene.add( cluster );
 ```
-**NOTE:** it is possible to use the module without the monkey patch, if you are using your own shaders, consult the shader snippets on how to hadnle the includes.
 
-## Constructor
-
-**InstancedGeometry( *bufferGeometry* , *material* , *placementFunction* , *instanceCount* , *uniformScale* , *disposeGeometry* )**
-  - **[THREE.BufferGeomety]:bufferGeometry** 
-
-  instance of BufferGeometry, this will be converted to InstancedBufferGeometry
-
-  - **[THREE.Material]:material** 
-  
-    instance of any material (other than `ShaderMaterial`, which needs to include the snippets manually
-  
-  - **[func]:placementFunction( object , objectIndex , objectCount )** 
-  
-    a function that transforms the instances, object is the object to be manipulated, objectIndex is index in the sequence, objectCount is the instance count set
-  - **[Int]:instanceCount** 
-  
-    how many objects to be placed by the placement function
-  
-  - **[bool]:uniformScale** 
-  
-    an optimization flag if the scale is known to be uniform
-  
-  
-  - **[bool]:disposeGeometry** 
-  
-    delete the original geometry provided
-
-## Methods
-
-Extends `THREE.Mesh`, no functionality added on top yet. 
 

@@ -4,7 +4,7 @@ Higher level abstraction of `THREE.InstancedBufferGeometry` for [three.js](https
 
 # what it should do
 
-Provide an abstraction for relatively low level `THREE.InstancedBufferGeometry`, allows for the instancing attributes to be setup by a "placement function" and converts a regular buffer geometry to instanced. This is a modified [webgl_performance_doublesided.html](http://dusanbosnjak.com/test/webGL/three-instanced-mesh/webgl_performance_doublesided.html) example running 30k objects instead of 5. All of the objects should be drawn with one draw call, thus speeding things up. It does a simple transformation of normals to view space if the instances are known to be uniformly scaled. If not, it does a mat3 inversion on the gpu (yikes!) but it works. 
+Provide an abstraction for relatively low level `THREE.InstancedBufferGeometry`, allows for the instancing attributes to be setup by a "placement function" and converts a regular buffer geometry to instanced. This is a modified [example](http://dusanbosnjak.com/test/webGL/three-instanced-mesh/webgl_performance_doublesided.html) running 30k objects instead of 5. All of the objects should be drawn with one draw call, thus speeding things up. It does a simple transformation of normals to view space if the instances are known to be uniformly scaled. If not, it does a mat3 inversion on the gpu (yikes!) but it works. 
 
 [Working with shadows.](http://dusanbosnjak.com/test/webGL/three-instanced-mesh/webgl_instanced_mesh.html)
 
@@ -12,34 +12,7 @@ So for example, if you have static world assets that need to be scattered, you c
 
 # how it works
 
-Including the module once will allow the usage of `THREE.InstancedMesh` constructor, it should also patch three different shader chunks to attach the instancing logic. It's possible to trigger these defines from outside, ~~but the depth materials are still buried in `THREE.WebGLShadows`.~~ Absolute w00tness, three.js already has a mechanism in plase that allows for something like this to be done without hacking! :)
-
-The module contains a monkey patch that modifies the following three.js classes:
-
- 
-
-- **color_pars_vertex.glsl**
-  
-  odd but this is the most convenient place to include stuff in the vertex shader outside of main()
-
-- **defaultnormal_vertex.glsl** 
-
-  normal transformation, this is where the optimization can occur if the scale is uniform
-
-- **begin_vertex.glsl**
-
-  vertex transformation
-  
-**TODO:** make a class that attaches the functionality to a provided material.
-
-The class will run the "placement function" during construction transforming an internal `Object3D` node and writing the TRS matrix into an attribute buffer N times. It will convert the provided `THREE.BufferGeometry` into a `THREE.InstancedBufferGeometry` and attach the additional attribute. The result is an `InstancedMesh` class (extends `Mesh`) with an `InstancedDistributedGeometry` class (extends `InstancedBufferGeometry`). This can then be treated as one object as far as rendering is concerned. A different structure can describe colliders for example and could be constructed in the placement function.  
-
-It will consume additional three 'v4' attributes. ( rotation is in xyz , translation in w ).
-
-# NOTE 
-
-Just include it and it should work :)
-~~this works only on r78, see this [pull request](https://github.com/mrdoob/three.js/pull/10750) for discussion, and this [fork](https://github.com/pailhead/three.js/tree/InstancedMesh) if you want to build it for r84 **and have shadows enabled**. Otherwise, including this once will patch the provided instance of three and you'll have `THREE.InstancedMesh` available as a constructor. ~~
+Including the module once will allow the usage of `THREE.InstancedMesh` constructor, it should also patch three different shader chunks to attach the instancing logic.
 
 # Usage
 

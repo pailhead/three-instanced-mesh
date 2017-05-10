@@ -2,10 +2,7 @@
  * Dusan Bosnjak @pailhead
  **************************/
 
-
 // transform vertices with the transform matrix
-
-// think there may have been a race condition somewhere with the definition
 
 module.exports = [
 
@@ -15,26 +12,16 @@ module.exports = [
 
 "#else",
 
+"#ifndef INSTANCE_MATRIX",
 
-"	#ifndef INSTANCE_TRANSFORM_DEFINED",
+	"mat4 _instanceMatrix = getInstanceMatrix();",
 
-"	mat4 aTRS = mat4(",
+	"#define INSTANCE_MATRIX",
 
-//format it so that we dont waste a whole attribute
+"#endif",
 
-"		vec4( aTRS0.xyz , 0.),",
-"		vec4( aTRS1.xyz , 0.),",
-"		vec4( aTRS2.xyz , 0.),",
-"		vec4( aTRS0.w , aTRS1.w , aTRS2.w , 1.)",
+"vec3 transformed = ( getInstanceMatrix() * vec4( position , 1. )).xyz;",
 
-"	);",
-
-"	#define INSTANCE_TRANSFORM_DEFINED",
-
-"	#endif",
-
-"vec3 transformed = ( aTRS * vec4( position , 1. )).xyz;",
-
-"#endif"
+"#endif",
 
 ].join("\n")

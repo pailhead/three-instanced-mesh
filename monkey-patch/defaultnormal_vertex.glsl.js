@@ -12,34 +12,29 @@ module.exports = [
 
 "#ifndef INSTANCE_TRANSFORM",
 
-"vec3 transformedNormal = normalMatrix * objectNormal;",
+	"vec3 transformedNormal = normalMatrix * objectNormal;",
 
 "#else",
 
-"#ifndef INSTANCE_TRANSFORM_DEFINED",
+"#ifndef INSTANCE_MATRIX ",
 
-"mat4 aTRS = mat4(",
+	"mat4 _instanceMatrix = getInstanceMatrix();",
 
-	"vec4( aTRS0.xyz , 0.),",
-	"vec4( aTRS1.xyz , 0.),",
-	"vec4( aTRS2.xyz , 0.),",
-	"vec4( aTRS0.w , aTRS1.w , aTRS2.w , 1.)",
-
-");",
-
-"#define INSTANCE_TRANSFORM_DEFINED",
+	"#define INSTANCE_MATRIX",
 
 "#endif",
 
 "#ifndef INSTANCE_UNIFORM",
+
+	"#ifndef INSTANCE_UNIFORM",
 	
-"vec3 transformedNormal =  transpose( inverse( mat3( modelViewMatrix * aTRS ) ) ) * objectNormal;",
+		"vec3 transformedNormal =  transpose( inverse( mat3( modelViewMatrix * _instanceMatrix ) ) ) * objectNormal ;",
 
-"#else",
+		"#else",
 
-"vec3 transformedNormal = ( modelViewMatrix * aTRS * vec4( objectNormal , 0.0 ) ).xyz;",
+		"vec3 transformedNormal = ( modelViewMatrix * _instanceMatrix * vec4( objectNormal , 0.0 ) ).xyz;",
 
-"#endif",
+	"#endif",
 
 "#endif"
 

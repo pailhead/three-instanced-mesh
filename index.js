@@ -7,17 +7,14 @@ module.exports = function( THREE ){
 //monkeypatch shaders
 require('./monkey-patch.js')(THREE);
 
-//geometry helper class
-var InstancedDistributedGeometry = require('./InstancedDistributedGeometry')(THREE);
-
 //depth mat
-var depthMaterialTemplate = new THREE.MeshDepthMaterial();
+var depthMaterial = new THREE.MeshDepthMaterial();
 
-depthMaterialTemplate.depthPacking = THREE.RGBADepthPacking;
+depthMaterial.depthPacking = THREE.RGBADepthPacking;
 
-depthMaterialTemplate.clipping = true;
+depthMaterial.clipping = true;
 
-depthMaterialTemplate.defines = {
+depthMaterial.defines = {
 
 	INSTANCE_TRANSFORM: ''
 
@@ -39,7 +36,6 @@ var
 		clipping: true
 	})
 ;
-
 
 //main class
 THREE.InstancedMesh = function ( bufferGeometry , material , numInstances , dynamic , colors , uniformScale ) {
@@ -66,18 +62,18 @@ THREE.InstancedMesh = function ( bufferGeometry , material , numInstances , dyna
 	this.frustumCulled = false; //you can uncheck this if you generate your own bounding info
 
 	//make it work with depth effects
-	this.customDepthMaterial = depthMaterialTemplate; 
+	this.customDepthMaterial = depthMaterial; 
 
-	this.customDistanceMaterial = distanceMaterialTemplate;
+	this.customDistanceMaterial = distanceMaterial;
 
 }
 
-InstancedMesh.prototype = Object.create( Mesh.prototype );
+THREE.InstancedMesh.prototype = Object.create( THREE.Mesh.prototype );
 
-InstancedMesh.constructor = InstancedMesh;
+THREE.InstancedMesh.constructor = THREE.InstancedMesh;
 
 //this is kinda gnarly, done in order to avoid setting these defines in the WebGLRenderer (it manages most if not all of the define flags)
-Object.defineProperties( InstancedMesh.prototype , {
+Object.defineProperties( THREE.InstancedMesh.prototype , {
 
 	'material': {
 
@@ -174,25 +170,25 @@ Object.defineProperties( InstancedMesh.prototype , {
 
 });
 
-InstancedMesh.prototype.setPositionAt = function( index , position ){
+THREE.InstancedMesh.prototype.setPositionAt = function( index , position ){
 
 	this.geometry.attributes.instancePosition.setXYZ( index , position.x , position.y , position.z );
 
 };
 
-InstancedMesh.prototype.setQuaternionAt = function ( index , quat ) {
+THREE.InstancedMesh.prototype.setQuaternionAt = function ( index , quat ) {
 
 	this.geometry.attributes.instanceQuaternion.setXYZW( index , quat.x , quat.y , quat.z , quat.w );
 
 };
 
-InstancedMesh.prototype.setScaleAt = function ( index , scale ) {
+THREE.InstancedMesh.prototype.setScaleAt = function ( index , scale ) {
 
 	this.geometry.attributes.instanceScale.setXYZ( index , scale.x , scale.y , scale.z );
 
 };
 
-InstancedMesh.prototype.setColorAt = function ( index , color ) {
+THREE.InstancedMesh.prototype.setColorAt = function ( index , color ) {
 
 	if( !this._colors ) {
 
@@ -211,7 +207,7 @@ InstancedMesh.prototype.setColorAt = function ( index , color ) {
 
 };
 
-InstancedMesh.prototype.needsUpdate = function( attribute ){
+THREE.InstancedMesh.prototype.needsUpdate = function( attribute ){
 
 	switch ( attribute ){
 
@@ -250,7 +246,7 @@ InstancedMesh.prototype.needsUpdate = function( attribute ){
 
 };
 
-InstancedMesh.prototype._setAttributes = function(){
+THREE.InstancedMesh.prototype._setAttributes = function(){
 
 	this.geometry.addAttribute( 'instancePosition' , 	new THREE.InstancedBufferAttribute( new Float32Array( this.numInstances * 3 ) , 3 , 1 ) ); 
 	this.geometry.addAttribute( 'instanceQuaternion' , 	new THREE.InstancedBufferAttribute( new Float32Array( this.numInstances * 4 ) , 4 , 1 ) );
@@ -270,5 +266,7 @@ InstancedMesh.prototype._setAttributes = function(){
 	}	
 
 };
+
+return THREE.InstancedMesh;
 
 };

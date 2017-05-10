@@ -10,6 +10,6 @@ module.exports = function( THREE ){
 	THREE.ShaderChunk[ 'color_pars_fragment.glsl' ] = 	require('./color_pars_fragment.glsl.js');
 	THREE.ShaderChunk[ 'color_vertex.glsl' ] = 			require('./color_vertex.glsl.js');
 	THREE.ShaderChunk[ 'defaultnormal_vertex' ] = 		require('./defaultnormal_vertex.glsl.js');
-	THREE.ShaderChunk[ 'vertex_include' ] = 			require('./vertex_include.glsl.js');
+	THREE.ShaderChunk[ 'uv_pars_vertex' ] = 			require('./uv_pars_vertex.glsl.js');
 	
 }

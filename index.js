@@ -207,6 +207,80 @@ THREE.InstancedMesh.prototype.setColorAt = function ( index , color ) {
 
 };
 
+THREE.InstancedMesh.prototype.getPositionAt = function( index , position ){
+
+	var arr = this.geometry.attributes.instancePosition.array;
+
+	index *= 3;
+
+	return position ? 
+
+		position.set( arr[index++], arr[index++], arr[index] ) :
+
+		new THREE.Vector3(  arr[index++], arr[index++], arr[index] )
+	;
+	
+};
+
+THREE.InstancedMesh.prototype.getQuaternionAt = function ( index , quat ) {
+
+	var arr = this.geometry.attributes.instanceQuaternion.array;
+
+	index = index << 2;
+
+	return quat ? 
+
+		quat.set(       arr[index++], arr[index++], arr[index++], arr[index] ) :
+
+		new THREE.Quaternion( arr[index++], arr[index++], arr[index++], arr[index] )
+	;
+	
+};
+
+THREE.InstancedMesh.prototype.getScaleAt = function ( index , scale ) {
+
+	var arr = this.geometry.attributes.instanceScale.array;
+
+	index *= 3;
+
+	return scale ? 
+
+		scale.set(   arr[index++], arr[index++], arr[index] ) :
+
+		new THREE.Vector3( arr[index++], arr[index++], arr[index] )
+	;
+
+};
+
+THREE.InstancedMesh.prototype.getColorAt = (function(){
+
+	var inv255 = 1/255;
+
+	return function ( index , color ) {
+
+		if( !this._colors ) {
+
+			console.warn( 'THREE.InstancedMesh: color not enabled');
+
+			return false;
+
+		}
+
+		var arr = this.geometry.attributes.instanceColor.array;
+		
+		index *= 3;
+
+		return color ? 
+
+			color.setRGB( arr[index++] * inv255, arr[index++] * inv255, arr[index] * inv255 ) :
+
+			new THREE.Vector3( arr[index++], arr[index++], arr[index] ).multiplyScalar( inv255 )
+		;
+
+	};
+
+})()
+
 THREE.InstancedMesh.prototype.needsUpdate = function( attribute ){
 
 	switch ( attribute ){

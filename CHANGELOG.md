@@ -1,7 +1,10 @@
 # Changelog
 
 
-## [Released?]
+## [Unreleased]
+- Rewrite everything with es6
+- Add scripts for rollup?
+- Leverage `onBeforeCompile` and nuke the monkey patch?
 
 ## [85.3.1] - 12-26-2017
 ### Added

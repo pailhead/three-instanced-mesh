@@ -12,7 +12,7 @@ module.exports = [
 
 '#endif',
 
-'#ifdef INSTANCE_COLOR ',
+'#if defined(INSTANCE_COLOR)',
 		
 	'diffuseColor.rgb *= vInstanceColor;',
 		

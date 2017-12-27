@@ -26,7 +26,7 @@ module.exports = [
 
 	"#ifndef INSTANCE_UNIFORM",
 	
-		"vec3 transformedNormal =  transpose( inverse( mat3( modelViewMatrix * _instanceMatrix ) ) ) * objectNormal ;",
+		"vec3 transformedNormal =  transposeMat3( inverse( mat3( modelViewMatrix * _instanceMatrix ) ) ) * objectNormal ;",
 
 	"#else",
 

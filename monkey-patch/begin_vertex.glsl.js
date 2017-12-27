@@ -20,7 +20,7 @@ module.exports = [
 
 "#endif",
 
-"vec3 transformed = ( getInstanceMatrix() * vec4( position , 1. )).xyz;",
+"vec3 transformed = ( _instanceMatrix * vec4( position , 1. )).xyz;",
 
 "#endif",
 

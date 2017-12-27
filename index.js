@@ -7,14 +7,15 @@ module.exports = function( THREE ){
 //monkeypatch shaders
 require('./monkey-patch.js')(THREE);
 
+
 //depth mat
-var depthMaterial = new THREE.MeshDepthMaterial();
+var DEPTH_MATERIAL = new THREE.MeshDepthMaterial();
 
-depthMaterial.depthPacking = THREE.RGBADepthPacking;
+DEPTH_MATERIAL.depthPacking = THREE.RGBADepthPacking;
 
-depthMaterial.clipping = true;
+DEPTH_MATERIAL.clipping = true;
 
-depthMaterial.defines = {
+DEPTH_MATERIAL.defines = {
 
 	INSTANCE_TRANSFORM: ''
 
@@ -23,22 +24,30 @@ depthMaterial.defines = {
 //distance mat
 var 
 	
-	distanceShader = THREE.ShaderLib[ "distanceRGBA" ],
-	distanceUniforms = THREE.UniformsUtils.clone( distanceShader.uniforms ),
-	distanceMaterial = new THREE.ShaderMaterial( {
-		defines: {
-			'USE_SHADOWMAP': '',
-			'INSTANCE_TRANSFORM': ''
-		},
-		uniforms: distanceUniforms,
-		vertexShader: distanceShader.vertexShader,
-		fragmentShader: distanceShader.fragmentShader,
+	DISTANCE_SHADER = THREE.ShaderLib[ "distanceRGBA" ],
+	DISTANCE_UNIFORMS = THREE.UniformsUtils.clone( DISTANCE_SHADER.uniforms ),
+	DISTANCE_DEFINES = {
+		'USE_SHADOWMAP': '',
+		'INSTANCE_TRANSFORM': ''
+	},
+	DISTANCE_MATERIAL = new THREE.ShaderMaterial( {
+		defines: DISTANCE_DEFINES,
+		uniforms: DISTANCE_UNIFORMS,
+		vertexShader: DISTANCE_SHADER.vertexShader,
+		fragmentShader: DISTANCE_SHADER.fragmentShader,
 		clipping: true
 	})
 ;
 
 //main class
-THREE.InstancedMesh = function ( bufferGeometry , material , numInstances , dynamic , colors , uniformScale ) {
+THREE.InstancedMesh = function ( 
+	bufferGeometry, 
+	material, 
+	numInstances, 
+	dynamic, 
+	colors, 
+	uniformScale 
+) {
 
 	THREE.Mesh.call( this , (new THREE.InstancedBufferGeometry()).copy( bufferGeometry ) ); //hacky for now
 
@@ -62,9 +71,9 @@ THREE.InstancedMesh = function ( bufferGeometry , material , numInstances , dyna
 	this.frustumCulled = false; //you can uncheck this if you generate your own bounding info
 
 	//make it work with depth effects
-	this.customDepthMaterial = depthMaterial; 
+	this.customDepthMaterial = DEPTH_MATERIAL; 
 
-	this.customDistanceMaterial = distanceMaterial;
+	this.customDistanceMaterial = DISTANCE_MATERIAL;
 
 }
 
@@ -207,6 +216,80 @@ THREE.InstancedMesh.prototype.setColorAt = function ( index , color ) {
 
 };
 
+THREE.InstancedMesh.prototype.getPositionAt = function( index , position ){
+
+	var arr = this.geometry.attributes.instancePosition.array;
+
+	index *= 3;
+
+	return position ? 
+
+		position.set( arr[index++], arr[index++], arr[index] ) :
+
+		new THREE.Vector3(  arr[index++], arr[index++], arr[index] )
+	;
+	
+};
+
+THREE.InstancedMesh.prototype.getQuaternionAt = function ( index , quat ) {
+
+	var arr = this.geometry.attributes.instanceQuaternion.array;
+
+	index = index << 2;
+
+	return quat ? 
+
+		quat.set(       arr[index++], arr[index++], arr[index++], arr[index] ) :
+
+		new THREE.Quaternion( arr[index++], arr[index++], arr[index++], arr[index] )
+	;
+	
+};
+
+THREE.InstancedMesh.prototype.getScaleAt = function ( index , scale ) {
+
+	var arr = this.geometry.attributes.instanceScale.array;
+
+	index *= 3;
+
+	return scale ? 
+
+		scale.set(   arr[index++], arr[index++], arr[index] ) :
+
+		new THREE.Vector3( arr[index++], arr[index++], arr[index] )
+	;
+
+};
+
+THREE.InstancedMesh.prototype.getColorAt = (function(){
+
+	var inv255 = 1/255;
+
+	return function ( index , color ) {
+
+		if( !this._colors ) {
+
+			console.warn( 'THREE.InstancedMesh: color not enabled');
+
+			return false;
+
+		}
+
+		var arr = this.geometry.attributes.instanceColor.array;
+		
+		index *= 3;
+
+		return color ? 
+
+			color.setRGB( arr[index++] * inv255, arr[index++] * inv255, arr[index] * inv255 ) :
+
+			new THREE.Vector3( arr[index++], arr[index++], arr[index] ).multiplyScalar( inv255 )
+		;
+
+	};
+
+})()
+
 THREE.InstancedMesh.prototype.needsUpdate = function( attribute ){
 
 	switch ( attribute ){
@@ -258,7 +341,6 @@ THREE.InstancedMesh.prototype._setAttributes = function(){
 	this.geometry.attributes.instanceScale.dynamic = this._dynamic;
 	
 	if ( this._colors ){
-
 		this.geometry.addAttribute( 'instanceColor' , 	new THREE.InstancedBufferAttribute( new Uint8Array( this.numInstances * 3 ) , 3 , 1 ) );
 		this.geometry.attributes.instanceColor.normalized = true;
 		this.geometry.attributes.instanceColor.dynamic = this._dynamic;

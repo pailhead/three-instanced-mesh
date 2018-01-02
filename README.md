@@ -43,12 +43,12 @@ var material = new THREE.MeshPhongMaterial();
 
 //the instance group
 var cluster = new THREE.InstancedMesh( 
-  boxGeometry,                                                  //this is the same 
+  boxGeometry,                 //this is the same 
   material, 
-  10000,                                                        //instance count
-  false,                                                        //is it dynamic
-  false                                                          //does it have color
-  true,                                                        //uniform scale, if you know that the placement function will not do a non-uniform scale, this will optimize the shader
+  10000,                       //instance count
+  false,                       //is it dynamic
+  false                        //does it have color
+  true,                        //uniform scale, if you know that the placement function will not do a non-uniform scale, this will optimize the shader
 );
 
 var _v3 = new THREE.Vector3();

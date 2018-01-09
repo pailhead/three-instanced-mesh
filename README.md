@@ -10,8 +10,8 @@ TODO
 
 Provide an abstraction for relatively low level `THREE.InstancedBufferGeometry`, allows for the instancing attributes to be setup by a "placement function" and converts a regular buffer geometry to instanced. This is a modified [example](http://dusanbosnjak.com/test/webGL/three-instanced-mesh/webgl_performance_doublesided.html) running 30k objects instead of 5. All of the objects should be drawn with one draw call, thus speeding things up. It does a simple transformation of normals to view space if the instances are known to be uniformly scaled. If not, it does a mat3 inversion on the gpu (yikes!) but it works. 
 
-[Working with shadows.](http://dusanbosnjak.com/test/webGL/three-instanced-mesh/webgl_instanced_mesh_v4.html)
-[An attampt at "auto instancing"](http://dusanbosnjak.com/test/webGL/three-auto-instancing/)
+- [Working with shadows.](http://dusanbosnjak.com/test/webGL/three-instanced-mesh/webgl_instanced_mesh_v4.html)
+- [An attampt at "auto instancing"](http://dusanbosnjak.com/test/webGL/three-auto-instancing/)
 
 So for example, if you have static world assets that need to be scattered, you can group them with this thus saving a bit of memory (over merging) and a bit of overhead ( less draw calls ). You should still probably take care of how the assets are grouped so they could be culled. The class computes no bounding information. Swithing to different geometries should be really fast since only one is uploaded to the gpu, it shouldn't stutter much when initializing new geometry (when you first change the box to a sphere in the example).
 

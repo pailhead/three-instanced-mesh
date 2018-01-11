@@ -321,7 +321,10 @@ THREE.InstancedMesh.prototype.needsUpdate = function( attribute ){
 			this.geometry.attributes.instancePosition.needsUpdate =   true;
 			this.geometry.attributes.instanceQuaternion.needsUpdate = true;
 			this.geometry.attributes.instanceScale.needsUpdate =      true;
-			this.geometry.attributes.instanceColor.needsUpdate =      true;
+		
+			if(this._colors){
+				this.geometry.attributes.instanceColor.needsUpdate =      true;
+			}
 
 			break;
 

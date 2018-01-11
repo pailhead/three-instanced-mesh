@@ -2,13 +2,11 @@
 
 ## [Unreleased]
 - Rewrite everything with es6
-- Add scripts for rollup?
 - Leverage `onBeforeCompile` and nuke the monkey patch?
 
 ## [85.3.2] - 01-10-2018
 ### Fixed
 - `needsUpdate(undefined)` bug when no color attribute is present. 
-
 
 ## [85.3.1] - 12-26-2017
 ### Added

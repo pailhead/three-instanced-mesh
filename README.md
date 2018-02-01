@@ -66,4 +66,4 @@ for ( var i ; i < 10000 ; i ++ ) {
 scene.add( cluster );
 ```
 
-
+# please provide feedback or examples :)

@@ -55,11 +55,11 @@ var cluster = new THREE.InstancedMesh(
 var _v3 = new THREE.Vector3();
 var _q = new THREE.Quaternion();
 
-for ( var i ; i < 10000 ; i ++ ) {
+for ( var i = 0 ; i < 10000 ; i ++ ) {
   
   cluster.setQuaternionAt( i , _q );
-  cluster.setPositionAt( i , v3.set( Math.random() , Math.random(), Math.random() ) );
-  cluster.setScaleAt( i , v3.set(1,1,1) );
+  cluster.setPositionAt( i , _v3.set( Math.random() , Math.random(), Math.random() ) );
+  cluster.setScaleAt( i , _v3.set(1,1,1) );
 
 }
 

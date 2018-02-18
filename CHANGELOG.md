@@ -4,6 +4,10 @@
 - Rewrite everything with es6
 - Leverage `onBeforeCompile` and nuke the monkey patch?
 
+## [85.3.3] - 02-18-2018
+### Fixed
+- example code in README.md, i was uninitialized
+
 ## [85.3.2] - 01-10-2018
 ### Fixed
 - `needsUpdate(undefined)` bug when no color attribute is present. 

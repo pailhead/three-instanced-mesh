@@ -66,4 +66,7 @@ for ( var i = 0 ; i < 10000 ; i ++ ) {
 scene.add( cluster );
 ```
 
-# please provide feedback or examples :)
+## please provide feedback or examples use cases:)
+
+
+A man once stopped me in the street down in the TenderLoin and asked me "What's the best nation?" and I said "Giants!" thinking he said "Who's the best in the nation?". The answer was "Donation". If you find this useful you can totally support it by donating to my pizza budget :) paypal.me/pailhead

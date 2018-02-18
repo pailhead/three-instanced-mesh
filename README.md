@@ -20,8 +20,8 @@ So for example, if you have static world assets that need to be scattered, you c
 - Including the module will allow the usage of `THREE.InstancedMesh` constructor. This will also patch different shader chunks to attach the instancing logic to `THREE.ShaderChunks{}` (overrides certain chunks).
 - A `THREE.InstancedBufferGeometry` is instantiated and the provided `THREE.BufferGeometry` argument copied into it (instancing only works on `InstancedBufferGeometry`).
 - Three optimization flags - `dynamic`, `uniformScale` and `colors` are set. These should only be provided upon construction. `color` would instantiate another buffer which is wasteful if not used, `uniform` would require a shader recompilation (when false it uses a branch in glsl to do a heavy matrix computation), `dynamic` sets a buffer of a different type and is a property of `THREE.BufferGeometry`.
-- Instancing attributes are set taking these flags into consideration (`instancePosition`,`instanceQuaternion` and `instanceScale` are always created, `instanceColor` depends on the flag). Their arrays are **not instantiated**.
-- **The provided material is cloned.** It needs to be decorated with defines, `customDistanceMaterial` and `customDepthMaterial` in order to allow for instancing to interact with the rest of three's rendering logic that relies on depth (shadows, AO...). Three manages the default materials under the hood of `THREE.WebGLRenderer`. Internally it holds a cache of shader programs which are created based on the properties of a `Material` (and other stuff like lights). In order to not alter the renderer. This is all done here through a fancy `.material` setter, which is not the most elegant solution. 
+- Instancing attributes are set taking these flags into consideration (`instancePosition`,`instanceQuaternion` and `instanceScale` are always created, `instanceColor` depends on the flag). Their arrays are **not instantiated**. *The idea behind this is noble, why do any work you are going to make reduntant right away. Scale on the other hand can likely be just 1,1,1, maybe an optional method to "init" the mesh should be provided? Please give feedback*
+- **The provided material is cloned.** It needs to be decorated with defines, `customDistanceMaterial` and `customDepthMaterial` in order to allow for instancing to interact with the rest of three's rendering logic that relies on depth (shadows, AO...). Three manages the default materials under the hood of `THREE.WebGLRenderer`. Internally it holds a cache of shader programs which are created based on the properties of a `Material` (and other stuff like lights). In order to not alter the renderer. This is all done here through a fancy `.material` setter, which is not the most elegant solution. *Please provide feedback and use cases.*
 - Methods are used to fill buffers. 
 
 
@@ -66,4 +66,4 @@ for ( var i = 0 ; i < 10000 ; i ++ ) {
 scene.add( cluster );
 ```
 
-
+# please provide feedback or examples :)

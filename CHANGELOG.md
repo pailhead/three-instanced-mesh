@@ -8,6 +8,10 @@
 ### Fixed
 - example code in README.md, i was uninitialized
 
+## [85.3.2] - 01-31-2018
+### Added
+- call to feedback and use cases in README.md
+
 ## [85.3.2] - 01-10-2018
 ### Fixed
 - `needsUpdate(undefined)` bug when no color attribute is present. 

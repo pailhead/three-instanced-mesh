@@ -15,6 +15,8 @@ Provide an abstraction for relatively low level `THREE.InstancedBufferGeometry`,
 
 So for example, if you have static world assets that need to be scattered, you can group them with this thus saving a bit of memory (over merging) and a bit of overhead ( less draw calls ). You should still probably take care of how the assets are grouped so they could be culled. The class computes no bounding information. Swithing to different geometries should be really fast since only one is uploaded to the gpu, it shouldn't stutter much when initializing new geometry (when you first change the box to a sphere in the example).
 
+In order to pull this off with three.js you need some 400 lines of code as per this example. https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/webgl_buffergeometry_instancing_lambert.html
+
 # how it works
 
 - Including the module will allow the usage of `THREE.InstancedMesh` constructor. This will also patch different shader chunks to attach the instancing logic to `THREE.ShaderChunks{}` (overrides certain chunks).

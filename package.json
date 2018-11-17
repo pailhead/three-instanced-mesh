@@ -29,6 +29,6 @@
   },
   "homepage": "https://github.com/pailhead/three-instanced-mesh#readme",
   "devDependencies": {
-    "three": "^0.88.0"
+    "three": "^0.96.0"
   }
 }

@@ -334,9 +334,29 @@ THREE.InstancedMesh.prototype.needsUpdate = function( attribute ){
 
 THREE.InstancedMesh.prototype._setAttributes = function(){
 
-	this.geometry.addAttribute( 'instancePosition' , 	new THREE.InstancedBufferAttribute( new Float32Array( this.numInstances * 3 ) , 3 , 1 ) ); 
-	this.geometry.addAttribute( 'instanceQuaternion' , 	new THREE.InstancedBufferAttribute( new Float32Array( this.numInstances * 4 ) , 4 , 1 ) );
-	this.geometry.addAttribute( 'instanceScale' , 		new THREE.InstancedBufferAttribute( new Float32Array( this.numInstances * 3 ) , 3 , 1 ) );
+	var notNormalized = false
+	var meshPerAttribute = 1 
+
+	this.geometry.addAttribute( 
+		'instancePosition', 	
+		new THREE.InstancedBufferAttribute( 
+			new Float32Array( this.numInstances * 3 ) , 3 , notNormalized, meshPerAttribute 
+		) 
+	) 
+
+	this.geometry.addAttribute( 
+		'instanceQuaternion', 	
+		new THREE.InstancedBufferAttribute( 
+			new Float32Array( this.numInstances * 4 ) , 4 , notNormalized, meshPerAttribute 
+		) 
+	)
+
+	this.geometry.addAttribute( 
+		'instanceScale', 		
+		new THREE.InstancedBufferAttribute( 
+			new Float32Array( this.numInstances * 3 ) , 3 , notNormalized, meshPerAttribute 
+		) 
+	)
 
 	//TODO: allow different combinations
 	this.geometry.attributes.instancePosition.dynamic = this._dynamic;
@@ -344,8 +364,12 @@ THREE.InstancedMesh.prototype._setAttributes = function(){
 	this.geometry.attributes.instanceScale.dynamic = this._dynamic;
 	
 	if ( this._colors ){
-		this.geometry.addAttribute( 'instanceColor' , 	new THREE.InstancedBufferAttribute( new Uint8Array( this.numInstances * 3 ) , 3 , 1 ) );
-		this.geometry.attributes.instanceColor.normalized = true;
+		this.geometry.addAttribute( 
+			'instanceColor', 	
+			new THREE.InstancedBufferAttribute( 
+				new Uint8Array( this.numInstances * 3 ) , 3 , true, meshPerAttribute 
+			)
+		)
 		this.geometry.attributes.instanceColor.dynamic = this._dynamic;
 
 	}	

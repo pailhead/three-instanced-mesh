@@ -2,6 +2,10 @@
 
 Higher level abstraction of `THREE.InstancedBufferGeometry` for [three.js](https://github.com/mrdoob/three.js/). For a webgl level overview check out [TojiCode](http://blog.tojicode.com/2013/07/webgl-instancing-with.html).
 
+## note
+
+The signature for `THREE.InstancedBufferAttribute` changed with version R96. 0.96.0 of this package should work with >= R96, the previous one with the older. 
+
 # API
 
 TODO

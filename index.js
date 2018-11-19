@@ -4,6 +4,8 @@
  
 module.exports = function( THREE ){
 
+const differentSignature = parseInt(THREE.REVISION) >= 96
+
 //monkeypatch shaders
 require('./monkey-patch.js')(THREE);
 
@@ -334,45 +336,54 @@ THREE.InstancedMesh.prototype.needsUpdate = function( attribute ){
 
 THREE.InstancedMesh.prototype._setAttributes = function(){
 
-	var notNormalized = false
+	var normalized = true
 	var meshPerAttribute = 1 
+	var vec4Size = 4
+	var vec3Size = 3
 
-	this.geometry.addAttribute( 
-		'instancePosition', 	
-		new THREE.InstancedBufferAttribute( 
-			new Float32Array( this.numInstances * 3 ) , 3 , notNormalized, meshPerAttribute 
-		) 
-	) 
+	var attributes = {
+		instancePosition: [
+			new Float32Array( this.numInstances * vec3Size ), 
+			vec3Size, 
+			!normalized, 
+			meshPerAttribute,
+		],
+		instanceQuaternion: [
+			new Float32Array( this.numInstances * vec4Size ), 
+			vec4Size, 
+			!normalized, 
+			meshPerAttribute,
+		],
+		instanceScale: [
+			new Float32Array( this.numInstances * vec3Size ), 
+			vec3Size, 
+			!normalized,
+			meshPerAttribute,
+		]
+	}
 
-	this.geometry.addAttribute( 
-		'instanceQuaternion', 	
-		new THREE.InstancedBufferAttribute( 
-			new Float32Array( this.numInstances * 4 ) , 4 , notNormalized, meshPerAttribute 
-		) 
-	)
-
-	this.geometry.addAttribute( 
-		'instanceScale', 		
-		new THREE.InstancedBufferAttribute( 
-			new Float32Array( this.numInstances * 3 ) , 3 , notNormalized, meshPerAttribute 
-		) 
-	)
-
-	//TODO: allow different combinations
-	this.geometry.attributes.instancePosition.dynamic = this._dynamic;
-	this.geometry.attributes.instanceQuaternion.dynamic = this._dynamic;
-	this.geometry.attributes.instanceScale.dynamic = this._dynamic;
-	
 	if ( this._colors ){
-		this.geometry.addAttribute( 
-			'instanceColor', 	
-			new THREE.InstancedBufferAttribute( 
-				new Uint8Array( this.numInstances * 3 ) , 3 , true, meshPerAttribute 
-			)
-		)
-		this.geometry.attributes.instanceColor.dynamic = this._dynamic;
+		attributes.instanceColor = [
+			new Uint8Array( this.numInstances * vec3Size ), 
+			vec3Size, 
+			normalized, 
+			meshPerAttribute,
+		]
+	}
 
-	}	
+	Object.keys(attributes).forEach(name=>{
+		const a = attributes[name]
+		let attribute
+		if(differentSignature){
+			attribute = new THREE.InstancedBufferAttribute(...a)
+		} else {
+			attribute = new THREE.InstancedBufferAttribute(a[0],a[1],a[3])
+			attribute.normalized = a[2]
+		}
+			
+		attribute.dynamic = this._dynamic
+		this.geometry.addAttribute(name, attribute)
+	})
 
 };
 

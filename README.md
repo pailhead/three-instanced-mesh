@@ -8,7 +8,46 @@ The signature for `THREE.InstancedBufferAttribute` changed with version R96. ~0.
 
 # API
 
-TODO
+## Methods:
+
+**.setPositionAt( index: Int , position: THREE.Vector3 )**
+
+_Updates the position attribute at given index._
+
+**.setQuaternionAt( index: Int , quaternion: THREE.Quaternion )**
+
+_Updates the quaternion attribute at given index._
+
+**.setScaleAt( index: Int , scale: THREE.Vector3 )**
+
+_Updates the scale attribute at given index._
+
+**.setColorAt( index: Int , color: THREE.Color )**
+
+_Updates the color attribute at given index if instance colors are enabled._
+
+**.getPositionAt( index: Int , target: THREE.Vector3)**
+
+_Write value from position attribute at index into target THREE.Vector3._
+
+**.getQuaternionAt( index: Int , target: THREE.Quaternion)**
+
+_Write value from quaternion attribute at index into target THREE.Quaternion._
+
+**.getScaleAt( index: Int , target: THREE.Vector3)**
+
+_Write value from scale attribute at index into target THREE.Vector3.__
+
+**.getColorAt( index: Int , target: THREE.Color)**
+
+_Write value from color attribute at index into target THREE.Color if instance colors are enabled.
+
+**.needsUpdate( attributeName: String )**
+
+_Set appropriate attribute needsUpdate flags. If `attributeName` is omitted all of the attributes will be marked for updates. Valid names are `position, quaternion, scale, colors`. 
+
+
+
 
 # what it should do
 

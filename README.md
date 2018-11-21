@@ -4,7 +4,7 @@ Higher level abstraction of `THREE.InstancedBufferGeometry` for [three.js](https
 
 ## note
 
-The signature for `THREE.InstancedBufferAttribute` changed with version R96. 0.96.0 of this package should work with >= R96, the previous one with the older. 
+The signature for `THREE.InstancedBufferAttribute` changed with version R96. ~0.96.0 of this package should work with >= R96, the previous one with the older.~ 0.96.1 should work with all versions of three. 
 
 # API
 

@@ -46,6 +46,23 @@ _Write value from color attribute at index into target THREE.Color if instance c
 
 _Set appropriate attribute needsUpdate flags. If `attributeName` is omitted all of the attributes will be marked for updates. Valid names are `position, quaternion, scale, colors`. 
 
+## Properties:
+
+All of these have some side effects. This should probably be revisited but here are some notes:
+
+**.material: THREE.Material**
+
+_Whenever you set `myInstanceMesh.material = material` the material will be cloned and decorated with the instancing flags. This is supposed to make it simple to use, but is quite a side effect._
+
+**.numInstances: Int**
+
+_Number of instances, when this changes the attributes need to be reinstantiated._ 
+
+**.geometry: THREE.BufferGeometry**
+
+_If regular BufferGeometry is passed, this will create an instance of InstancedBufferGeometry and copy the attributes into it._ 
+
+
 
 
 

@@ -318,6 +318,8 @@ THREE.InstancedMesh.prototype.needsUpdate = function( attribute ){
 
 			this.geometry.attributes.instanceColor.needsUpdate =      true;
 
+			break;
+			
 		default:
 
 			this.geometry.attributes.instancePosition.needsUpdate =   true;

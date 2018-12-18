@@ -1,6 +1,6 @@
 # three-instanced-mesh
 
-Higher level abstraction of `THREE.InstancedBufferGeometry` for [three.js](https://github.com/mrdoob/three.js/). For a webgl level overview check out [TojiCode](http://blog.tojicode.com/2013/07/webgl-instancing-with.html).
+Higher level abstraction of `THREE.InstancedBufferGeometry` for [three.js](https://github.com/mrdoob/three.js/). For a webgl level overview check out [TojiCode](http://blog.tojicode.com/2013/07/webgl-instancing-with.html). For more in depth overview on how this works, [i've written an article more or less on how to build this from scratch](https://medium.com/@pailhead011/instancing-with-three-js-36b4b62bc127).
 
 ## note
 
@@ -85,9 +85,6 @@ In order to pull this off with three.js you need some 400 lines of code as per t
 - Instancing attributes are set taking these flags into consideration (`instancePosition`,`instanceQuaternion` and `instanceScale` are always created, `instanceColor` depends on the flag). Their arrays are **not instantiated**. *The idea behind this is noble, why do any work you are going to make reduntant right away. Scale on the other hand can likely be just 1,1,1, maybe an optional method to "init" the mesh should be provided? Please give feedback*
 - **The provided material is cloned.** It needs to be decorated with defines, `customDistanceMaterial` and `customDepthMaterial` in order to allow for instancing to interact with the rest of three's rendering logic that relies on depth (shadows, AO...). Three manages the default materials under the hood of `THREE.WebGLRenderer`. Internally it holds a cache of shader programs which are created based on the properties of a `Material` (and other stuff like lights). In order to not alter the renderer. This is all done here through a fancy `.material` setter, which is not the most elegant solution. *Please provide feedback and use cases.*
 - Methods are used to fill buffers. 
-
-If interested more in the topic, [i've written an article more or less on how to build this from scratch](https://medium.com/@pailhead011/instancing-with-three-js-36b4b62bc127).
-
 
 # Usage
 

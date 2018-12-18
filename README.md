@@ -1,6 +1,6 @@
 # three-instanced-mesh
 
-Higher level abstraction of `THREE.InstancedBufferGeometry` for [three.js](https://github.com/mrdoob/three.js/). For a webgl level overview check out [TojiCode](http://blog.tojicode.com/2013/07/webgl-instancing-with.html). For more in depth overview on how this works, [i've written an article more or less on how to build this from scratch](https://medium.com/@pailhead011/instancing-with-three-js-36b4b62bc127).
+Higher level abstraction of `THREE.InstancedBufferGeometry` for [three.js](https://github.com/mrdoob/three.js/). For a webgl level overview check out [TojiCode](http://blog.tojicode.com/2013/07/webgl-instancing-with.html). For a more in depth overview on how this works, [i've written an article more or less on how to build this from scratch](https://medium.com/@pailhead011/instancing-with-three-js-36b4b62bc127).
 
 ## note
 
@@ -36,15 +36,15 @@ _Write value from quaternion attribute at index into target THREE.Quaternion._
 
 **.getScaleAt( index: Int , target: THREE.Vector3)**
 
-_Write value from scale attribute at index into target THREE.Vector3.__
+_Write value from scale attribute at index into target THREE.Vector3._
 
 **.getColorAt( index: Int , target: THREE.Color)**
 
-_Write value from color attribute at index into target THREE.Color if instance colors are enabled.
+_Write value from color attribute at index into target THREE.Color if instance colors are enabled._
 
 **.needsUpdate( attributeName: String )**
 
-_Set appropriate attribute needsUpdate flags. If `attributeName` is omitted all of the attributes will be marked for updates. Valid names are `position, quaternion, scale, colors`. 
+_Set appropriate attribute needsUpdate flags. If `attributeName` is omitted all of the attributes will be marked for updates. Valid names are `position, quaternion, scale, colors`._
 
 ## Properties:
 

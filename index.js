@@ -116,20 +116,18 @@ Object.defineProperties( THREE.InstancedMesh.prototype , {
                         if (this._uniformScale) m.defines.INSTANCE_UNIFORM = ''; //an optimization, should avoid doing an expensive matrix inverse in the shader
                         else delete m.defines['INSTANCE_UNIFORM'];
 
-				if ( this._colors ) m.defines.INSTANCE_COLOR = '';
-				else delete m.defines['INSTANCE_COLOR'];
-			}
+                        if ( this._colors ) m.defines.INSTANCE_COLOR = '';
+                        else delete m.defines['INSTANCE_COLOR'];
+                    }
 
-			else{ 
-			
-				m.defines = { INSTANCE_TRANSFORM: '' };
+                    else{
 
-				if ( this._uniformScale ) m.defines.INSTANCE_UNIFORM = '';
-				if ( this._colors ) m.defines.INSTANCE_COLOR = '';
-			}
+                        m.defines = { INSTANCE_TRANSFORM: '' };
 
-
-                }
+                        if ( this._uniformScale ) m.defines.INSTANCE_UNIFORM = '';
+                        if ( this._colors ) m.defines.INSTANCE_COLOR = '';
+                    }
+                };
 
                 if (Array.isArray(mat)) {
                     for (let i = 0; i < mat.length; i++) {

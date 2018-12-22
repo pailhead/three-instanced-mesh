@@ -130,14 +130,16 @@ Object.defineProperties( THREE.InstancedMesh.prototype , {
                 };
 
                 if (Array.isArray(mat)) {
+                	mat = mat.slice(0);
                     for (let i = 0; i < mat.length; i++) {
                         if(!mat[i])continue;
                         setM(mat[i]);
                     }
                     this._material = mat;
                 } else {
+                	mat = mat.clone();
                     setM(mat);
-                    this._material = mat.clone();
+                    this._material = mat;
                 }
             },
 

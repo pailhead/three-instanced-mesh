@@ -68,8 +68,8 @@ THREE.InstancedMesh = function (
 	 * this is in lieu of changing the renderer
 	 * WebGLRenderer injects stuff like this
 	 */
-	this.material = material.clone();
- 	
+	this.material = material;
+
 	this.frustumCulled = false; //you can uncheck this if you generate your own bounding info
 
 	//make it work with depth effects
@@ -88,50 +88,60 @@ Object.defineProperties( THREE.InstancedMesh.prototype , {
 
 	'material': {
 
-		set: function( m ){ 
+            set: function (mat) {
 
-			/**
-			 * whenever a material is set, decorate it, 
-			 * if a material used with regular geometry is passed, 
-			 * it will mutate it which is bad mkay
-			 *
-			 * either flag Material with these instance properties:
-			 * 
-			 *  "i want to create a RED PLASTIC material that will
-			 *   be INSTANCED and i know it will be used on clones
-			 *   that are known to be UNIFORMly scaled"
-			 *  (also figure out where dynamic fits here)
-			 *  
-			 * or check here if the material has INSTANCE_TRANSFORM
-			 * define set, if not, clone, document that it breaks reference
-			 * or do a shallow copy or something
-			 * 
-			 * or something else?
-			 */
-			m = m.clone();
+                let setM = function (m) {
+                    /**
+                     * whenever a material is set, decorate it,
+                     * if a material used with regular geometry is passed,
+                     * it will mutate it which is bad mkay
+                     *
+                     * either flag Material with these instance properties:
+                     *
+                     *  "i want to create a RED PLASTIC material that will
+                     *   be INSTANCED and i know it will be used on clones
+                     *   that are known to be UNIFORMly scaled"
+                     *  (also figure out where dynamic fits here)
+                     *
+                     * or check here if the material has INSTANCE_TRANSFORM
+                     * define set, if not, clone, document that it breaks reference
+                     * or do a shallow copy or something
+                     *
+                     * or something else?
+                     */
+                    if (m.defines) {
 
-			if ( m.defines ) {
-				
-				m.defines.INSTANCE_TRANSFORM = '';
-				
-				if ( this._uniformScale ) m.defines.INSTANCE_UNIFORM = ''; //an optimization, should avoid doing an expensive matrix inverse in the shader
-				else delete m.defines['INSTANCE_UNIFORM'];
+                        m.defines.INSTANCE_TRANSFORM = '';
 
-				if ( this._colors ) m.defines.INSTANCE_COLOR = '';
-				else delete m.defines['INSTANCE_COLOR'];
-			}
+                        if (this._uniformScale) m.defines.INSTANCE_UNIFORM = ''; //an optimization, should avoid doing an expensive matrix inverse in the shader
+                        else delete m.defines['INSTANCE_UNIFORM'];
 
-			else{ 
-			
-				m.defines = { INSTANCE_TRANSFORM: '' };
+                        if ( this._colors ) m.defines.INSTANCE_COLOR = '';
+                        else delete m.defines['INSTANCE_COLOR'];
+                    }
 
-				if ( this._uniformScale ) m.defines.INSTANCE_UNIFORM = '';
-				if ( this._colors ) m.defines.INSTANCE_COLOR = '';
-			}
+                    else{
 
-			this._material = m;
+                        m.defines = { INSTANCE_TRANSFORM: '' };
 
-		},
+                        if ( this._uniformScale ) m.defines.INSTANCE_UNIFORM = '';
+                        if ( this._colors ) m.defines.INSTANCE_COLOR = '';
+                    }
+                };
+
+                if (Array.isArray(mat)) {
+                	mat = mat.slice(0);
+                    for (let i = 0; i < mat.length; i++) {
+                        if(!mat[i])continue;
+                        setM(mat[i]);
+                    }
+                    this._material = mat;
+                } else {
+                	mat = mat.clone();
+                    setM(mat);
+                    this._material = mat;
+                }
+            },
 
 		get: function(){ return this._material; }
 
@@ -319,7 +329,7 @@ THREE.InstancedMesh.prototype.needsUpdate = function( attribute ){
 			this.geometry.attributes.instanceColor.needsUpdate =      true;
 
 			break;
-			
+
 		default:
 
 			this.geometry.attributes.instancePosition.needsUpdate =   true;

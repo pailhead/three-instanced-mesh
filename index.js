@@ -63,14 +63,14 @@ THREE.InstancedMesh = function (
 
 	this._setAttributes();
 
-        /**
-         * use the setter to decorate this material
-         * this is in lieu of changing the renderer
-         * WebGLRenderer injects stuff like this
-         */
-        this.material = material;
+	/**
+	 * use the setter to decorate this material
+	 * this is in lieu of changing the renderer
+	 * WebGLRenderer injects stuff like this
+	 */
+	this.material = material;
 
-        this.frustumCulled = false; //you can uncheck this if you generate your own bounding info
+	this.frustumCulled = false; //you can uncheck this if you generate your own bounding info
 
 	//make it work with depth effects
 	this.customDepthMaterial = DEPTH_MATERIAL; 

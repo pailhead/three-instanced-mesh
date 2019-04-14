@@ -25,7 +25,7 @@ module.exports = [
 	"#endif",
 
 	"#ifndef INSTANCE_UNIFORM",
-	
+
 		"vec3 transformedNormal =  transposeMat3( inverse( mat3( modelViewMatrix * _instanceMatrix ) ) ) * objectNormal ;",
 
 	"#else",
@@ -34,6 +34,42 @@ module.exports = [
 
 	"#endif",
 
-"#endif"
+"#endif",
+
+"#ifdef USE_TANGENT",
+
+	"#ifdef FLIP_SIDED",
+
+		"objectTangent = -objectTangent;",
+
+	"#endif",
+
+	"#ifndef INSTANCE_TRANSFORM",
+
+		"vec3 transformedTangent = normalMatrix * objectTangent;",
+
+	"#else",
+
+		"#ifndef INSTANCE_MATRIX",
+	
+			"mat4 _instanceMatrix = getInstanceMatrix();",
+	
+			"#define INSTANCE_MATRIX",
+	
+		"#endif",
+	
+		"#ifndef INSTANCE_UNIFORM",
+	
+			"vec3 transformedTangent =  transposeMat3( inverse( mat3( modelViewMatrix * _instanceMatrix ) ) ) * objectTangent;",
+	
+		"#else",
+	
+			"vec3 transformedTangent = ( modelViewMatrix * _instanceMatrix * vec4( objectTangent , 0.0 ) ).xyz;",
+	
+		"#endif",
+
+	"#endif",
+	
+"#endif",
 
 ].join("\n");

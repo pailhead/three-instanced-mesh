@@ -9,12 +9,8 @@ module.exports = [
 	"objectNormal = -objectNormal;",
 
 "#endif",
-
-"#ifndef INSTANCE_TRANSFORM",
-
-	"vec3 transformedNormal = normalMatrix * objectNormal;",
-
-"#else",
+	
+"#ifdef INSTANCE_TRANSFORM",
 
 	"#ifndef INSTANCE_MATRIX ",
 
@@ -23,17 +19,35 @@ module.exports = [
 		"#define INSTANCE_MATRIX",
 
 	"#endif",
-
-	"#ifndef INSTANCE_UNIFORM",
 	
-		"vec3 transformedNormal =  transposeMat3( inverse( mat3( modelViewMatrix * _instanceMatrix ) ) ) * objectNormal ;",
-
+	"#ifdef INSTANCE_UNIFORM",
+	
+		"mat3 _normalTransformMatrix = mat3(modelViewMatrix * _instanceMatrix);",
+	
 	"#else",
+	
+		"mat3 _normalTransformMatrix = transposeMat3( inverse( mat3( modelViewMatrix * _instanceMatrix ) ) );",
+	
+	"#endif",
+	
+"#else",
 
-		"vec3 transformedNormal = ( modelViewMatrix * _instanceMatrix * vec4( objectNormal , 0.0 ) ).xyz;",
+	"mat3 _normalTransformMatrix = normalMatrix;",	
+	
+"#endif",
+	
+"vec3 transformedNormal = _normalTransformMatrix * objectNormal;",
+
+"#ifdef USE_TANGENT",
+
+	"#ifdef FLIP_SIDED",
+
+		"objectTangent = -objectTangent;",
 
 	"#endif",
 
-"#endif"
+	"vec3 transformedTangent = _normalTransformMatrix * objectTangent;",
+	
+"#endif",
 
 ].join("\n");

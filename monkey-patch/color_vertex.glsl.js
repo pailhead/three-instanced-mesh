@@ -15,6 +15,7 @@ module.exports = [
 "#if defined( INSTANCE_COLOR ) && defined( INSTANCE_TRANSFORM )",
 		
 	"vInstanceColor = instanceColor;",
+	"vInstanceOpacity = instanceOpacity;",
 		
 "#endif",
 

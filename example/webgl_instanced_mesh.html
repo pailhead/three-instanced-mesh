@@ -90,6 +90,8 @@
 				scene.add( dirLight );
 				var geometry = new THREE.BoxGeometry( 10, 0.15, 10 );
 				var material = new THREE.MeshPhongMaterial( {
+                    transparent: true,
+                    opacity: 1,
 					color: 0x888888,
 					shininess: 150,
 					specular: 0x888888,
@@ -150,16 +152,22 @@
 				var materials = {
 					
 					phong: new THREE.MeshPhongMaterial( {
+                        transparent: true,
+                        opacity: 1,
 						color: 0xff00ff,
 						shininess: 150,
 						specular: 0x222222,
 						shading: THREE.SmoothShading
 					}),
 					lambert: new THREE.MeshLambertMaterial({
+                        transparent: true,
+                        opacity: 1,
 						color: 0xffff00
 					}),
 					
 					standard: new THREE.MeshStandardMaterial({
+                        transparent: true,
+                        opacity: 1,
 						color: 0x00ffff
 					})
 				};
@@ -236,6 +244,7 @@
 										if ( color ) {
 											_color.setHSL( Math.random() , 0.5 , 0.5 );
 											instancedMesh.setColorAt( i , _color );
+											instancedMesh.setOpacityAt( i , Math.random() );
 										}
 										if( i === 15 ){
 											instancedMesh.setPositionAt( 	i , new THREE.Vector3() );
@@ -286,7 +295,8 @@
 						cache[ getKey() ].getQuaternionAt( 15 ),
 						cache[ getKey() ].getPositionAt( 15 ),
 						cache[ getKey() ].getScaleAt( 15 ),
-						cache[ getKey() ].getColorAt( 15 )
+						cache[ getKey() ].getColorAt( 15 ),
+						cache[ getKey() ].getOpacityAt( 15 )
 					)	
 				})
 				gui.open();

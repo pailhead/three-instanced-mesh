@@ -26,6 +26,10 @@ _Updates the scale attribute at given index._
 
 _Updates the color attribute at given index if instance colors are enabled._
 
+**.setOpacityAt( index: Int , opacity: number )**
+
+_Updates the opacity attribute at given index if instance colors are enabled. Opacity is a number between 0 and 1. Note that opacity sorting may not work well because the objects won't be sorted individually within the scene but as a whole, which may cause objects to pop in/out from behind/in front of other objects._
+
 **.getPositionAt( index: Int , target: THREE.Vector3)**
 
 _Write value from position attribute at index into target THREE.Vector3._
@@ -41,6 +45,10 @@ _Write value from scale attribute at index into target THREE.Vector3._
 **.getColorAt( index: Int , target: THREE.Color)**
 
 _Write value from color attribute at index into target THREE.Color if instance colors are enabled._
+
+**.getOpacityAt( index: Int )**
+
+_Returns the opacity value at index if instance colors are enabled._
 
 **.needsUpdate( attributeName: String )**
 
@@ -82,7 +90,7 @@ In order to pull this off with three.js you need some 400 lines of code as per t
 - Including the module will allow the usage of `THREE.InstancedMesh` constructor. This will also patch different shader chunks to attach the instancing logic to `THREE.ShaderChunks{}` (overrides certain chunks).
 - A `THREE.InstancedBufferGeometry` is instantiated and the provided `THREE.BufferGeometry` argument copied into it (instancing only works on `InstancedBufferGeometry`).
 - Three optimization flags - `dynamic`, `uniformScale` and `colors` are set. These should only be provided upon construction. `color` would instantiate another buffer which is wasteful if not used, `uniform` would require a shader recompilation (when false it uses a branch in glsl to do a heavy matrix computation), `dynamic` sets a buffer of a different type and is a property of `THREE.BufferGeometry`.
-- Instancing attributes are set taking these flags into consideration (`instancePosition`,`instanceQuaternion` and `instanceScale` are always created, `instanceColor` depends on the flag). Their arrays are **not instantiated**. *The idea behind this is noble, why do any work you are going to make reduntant right away. Scale on the other hand can likely be just 1,1,1, maybe an optional method to "init" the mesh should be provided? Please give feedback*
+- Instancing attributes are set taking these flags into consideration (`instancePosition`,`instanceQuaternion` and `instanceScale` are always created, `instanceColor` and `instanceOpacity` depend on the flag). Their arrays are **not instantiated**. *The idea behind this is noble, why do any work you are going to make reduntant right away. Scale on the other hand can likely be just 1,1,1, maybe an optional method to "init" the mesh should be provided? Please give feedback*
 - **The provided material is cloned.** It needs to be decorated with defines, `customDistanceMaterial` and `customDepthMaterial` in order to allow for instancing to interact with the rest of three's rendering logic that relies on depth (shadows, AO...). Three manages the default materials under the hood of `THREE.WebGLRenderer`. Internally it holds a cache of shader programs which are created based on the properties of a `Material` (and other stuff like lights). In order to not alter the renderer. This is all done here through a fancy `.material` setter, which is not the most elegant solution. *Please provide feedback and use cases.*
 - Methods are used to fill buffers. 
 

@@ -43,6 +43,8 @@ module.exports = [
 "#if defined( INSTANCE_COLOR )",
   "attribute vec3 instanceColor;",
   "varying vec3 vInstanceColor;",
+  "attribute float instanceOpacity;",
+  "varying float vInstanceOpacity;",
 "#endif",
 
 "mat4 getInstanceMatrix(){",

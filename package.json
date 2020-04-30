@@ -7,7 +7,8 @@
     "example": "example"
   },
   "scripts": {
-    "build": "browserify example.js --o build.js"
+    "build": "browserify example.js --o build.js",
+    "example": "npm run build && serve ."
   },
   "repository": {
     "type": "git",
@@ -29,6 +30,8 @@
   },
   "homepage": "https://github.com/pailhead/three-instanced-mesh#readme",
   "devDependencies": {
+    "browserify": "^16.5.1",
+    "serve": "^11.3.0",
     "three": "^0.96.0"
   }
 }

@@ -15,6 +15,7 @@ module.exports = [
 "#if defined( INSTANCE_COLOR )",
 		
 	"varying vec3 vInstanceColor;",
+	"varying float vInstanceOpacity;",
 		
 "#endif"
 

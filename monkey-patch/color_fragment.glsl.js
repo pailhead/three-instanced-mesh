@@ -15,6 +15,7 @@ module.exports = [
 '#if defined(INSTANCE_COLOR)',
 		
 	'diffuseColor.rgb *= vInstanceColor;',
+	'diffuseColor.a = vInstanceOpacity * opacity;',
 		
 '#endif'
 

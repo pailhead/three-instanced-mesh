@@ -218,6 +218,20 @@ THREE.InstancedMesh.prototype.setColorAt = function ( index , color ) {
 
 };
 
+THREE.InstancedMesh.prototype.setOpacityAt = function ( index , opacity ) {
+
+	if( !this._colors ) {
+
+		console.warn( 'THREE.InstancedMesh: color not enabled');
+
+		return;
+
+	}
+
+	this.geometry.attributes.instanceOpacity.setX( index, opacity );
+
+};
+
 THREE.InstancedMesh.prototype.getPositionAt = function( index , position ){
 
 	var arr = this.geometry.attributes.instancePosition.array;
@@ -292,6 +306,20 @@ THREE.InstancedMesh.prototype.getColorAt = (function(){
 
 })()
 
+THREE.InstancedMesh.prototype.getOpacityAt = function ( index ) {
+
+    if( !this._colors ) {
+
+        console.warn( 'THREE.InstancedMesh: color not enabled');
+
+        return false;
+
+    }
+
+    return this.geometry.attributes.instanceOpacity.getX( index );
+
+};
+
 THREE.InstancedMesh.prototype.needsUpdate = function( attribute ){
 
 	switch ( attribute ){
@@ -319,6 +347,12 @@ THREE.InstancedMesh.prototype.needsUpdate = function( attribute ){
 			this.geometry.attributes.instanceColor.needsUpdate =      true;
 
 			break;
+
+		case 'opacity' :
+
+			this.geometry.attributes.instanceOpacity.needsUpdate =    true;
+
+			break;
 			
 		default:
 
@@ -327,7 +361,8 @@ THREE.InstancedMesh.prototype.needsUpdate = function( attribute ){
 			this.geometry.attributes.instanceScale.needsUpdate =      true;
 		
 			if(this._colors){
-				this.geometry.attributes.instanceColor.needsUpdate =      true;
+				this.geometry.attributes.instanceColor.needsUpdate =   true;
+				this.geometry.attributes.instanceOpacity.needsUpdate = true;
 			}
 
 			break;
@@ -368,6 +403,12 @@ THREE.InstancedMesh.prototype._setAttributes = function(){
 		attributes.instanceColor = [
 			new Uint8Array( this.numInstances * vec3Size ), 
 			vec3Size, 
+			normalized, 
+			meshPerAttribute,
+		],
+		attributes.instanceOpacity = [
+			new Float32Array( this.numInstances ).fill( 1 ), 
+			1, 
 			normalized, 
 			meshPerAttribute,
 		]

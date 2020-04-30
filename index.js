@@ -407,7 +407,7 @@ THREE.InstancedMesh.prototype._setAttributes = function(){
 			meshPerAttribute,
 		],
 		attributes.instanceOpacity = [
-			new Float32Array( this.numInstances ), 
+			new Float32Array( this.numInstances ).fill( 1 ), 
 			1, 
 			normalized, 
 			meshPerAttribute,

@@ -384,7 +384,8 @@ THREE.InstancedMesh.prototype._setAttributes = function(){
 		}
 			
 		attribute.dynamic = this._dynamic
-		this.geometry.addAttribute(name, attribute)
+		if ( THREE.REVISION >= 110 ) this.geometry.setAttribute(name, attribute)
+		else this.geometry.addAttribute(name, attribute)
 	})
 
 };

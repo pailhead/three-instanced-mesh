@@ -42,7 +42,7 @@ var
 ;
 
 //main class
-THREE.InstancedMesh = function ( 
+function InstancedMesh( 
 	bufferGeometry, 
 	material, 
 	numInstances, 
@@ -79,12 +79,12 @@ THREE.InstancedMesh = function (
 
 }
 
-THREE.InstancedMesh.prototype = Object.create( THREE.Mesh.prototype );
+InstancedMesh.prototype = Object.create( THREE.Mesh.prototype );
 
-THREE.InstancedMesh.constructor = THREE.InstancedMesh;
+InstancedMesh.constructor = InstancedMesh;
 
 //this is kinda gnarly, done in order to avoid setting these defines in the WebGLRenderer (it manages most if not all of the define flags)
-Object.defineProperties( THREE.InstancedMesh.prototype , {
+Object.defineProperties( InstancedMesh.prototype , {
 
 	'material': {
 
@@ -181,29 +181,29 @@ Object.defineProperties( THREE.InstancedMesh.prototype , {
 
 });
 
-THREE.InstancedMesh.prototype.setPositionAt = function( index , position ){
+InstancedMesh.prototype.setPositionAt = function( index , position ){
 
 	this.geometry.attributes.instancePosition.setXYZ( index , position.x , position.y , position.z );
 
 };
 
-THREE.InstancedMesh.prototype.setQuaternionAt = function ( index , quat ) {
+InstancedMesh.prototype.setQuaternionAt = function ( index , quat ) {
 
 	this.geometry.attributes.instanceQuaternion.setXYZW( index , quat.x , quat.y , quat.z , quat.w );
 
 };
 
-THREE.InstancedMesh.prototype.setScaleAt = function ( index , scale ) {
+InstancedMesh.prototype.setScaleAt = function ( index , scale ) {
 
 	this.geometry.attributes.instanceScale.setXYZ( index , scale.x , scale.y , scale.z );
 
 };
 
-THREE.InstancedMesh.prototype.setColorAt = function ( index , color ) {
+InstancedMesh.prototype.setColorAt = function ( index , color ) {
 
 	if( !this._colors ) {
 
-		console.warn( 'THREE.InstancedMesh: color not enabled');
+		console.warn( 'InstancedMesh: color not enabled');
 
 		return;
 
@@ -218,7 +218,7 @@ THREE.InstancedMesh.prototype.setColorAt = function ( index , color ) {
 
 };
 
-THREE.InstancedMesh.prototype.getPositionAt = function( index , position ){
+InstancedMesh.prototype.getPositionAt = function( index , position ){
 
 	var arr = this.geometry.attributes.instancePosition.array;
 
@@ -233,7 +233,7 @@ THREE.InstancedMesh.prototype.getPositionAt = function( index , position ){
 	
 };
 
-THREE.InstancedMesh.prototype.getQuaternionAt = function ( index , quat ) {
+InstancedMesh.prototype.getQuaternionAt = function ( index , quat ) {
 
 	var arr = this.geometry.attributes.instanceQuaternion.array;
 
@@ -248,7 +248,7 @@ THREE.InstancedMesh.prototype.getQuaternionAt = function ( index , quat ) {
 	
 };
 
-THREE.InstancedMesh.prototype.getScaleAt = function ( index , scale ) {
+InstancedMesh.prototype.getScaleAt = function ( index , scale ) {
 
 	var arr = this.geometry.attributes.instanceScale.array;
 
@@ -263,7 +263,7 @@ THREE.InstancedMesh.prototype.getScaleAt = function ( index , scale ) {
 
 };
 
-THREE.InstancedMesh.prototype.getColorAt = (function(){
+InstancedMesh.prototype.getColorAt = (function(){
 
 	var inv255 = 1/255;
 
@@ -271,7 +271,7 @@ THREE.InstancedMesh.prototype.getColorAt = (function(){
 
 		if( !this._colors ) {
 
-			console.warn( 'THREE.InstancedMesh: color not enabled');
+			console.warn( 'InstancedMesh: color not enabled');
 
 			return false;
 
@@ -292,7 +292,7 @@ THREE.InstancedMesh.prototype.getColorAt = (function(){
 
 })()
 
-THREE.InstancedMesh.prototype.needsUpdate = function( attribute ){
+InstancedMesh.prototype.needsUpdate = function( attribute ){
 
 	switch ( attribute ){
 
@@ -336,7 +336,7 @@ THREE.InstancedMesh.prototype.needsUpdate = function( attribute ){
 
 };
 
-THREE.InstancedMesh.prototype._setAttributes = function(){
+InstancedMesh.prototype._setAttributes = function(){
 
 	var normalized = true
 	var meshPerAttribute = 1 
@@ -389,6 +389,6 @@ THREE.InstancedMesh.prototype._setAttributes = function(){
 
 };
 
-return THREE.InstancedMesh;
+return InstancedMesh;
 
 };

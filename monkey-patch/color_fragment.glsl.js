@@ -4,18 +4,20 @@
 
 // multiply the color with per instance color if enabled
 
-module.exports = [
+module.exports = /* glsl */`
+#if defined( USE_COLOR_ALPHA )
 
-'#ifdef USE_COLOR',
+	diffuseColor *= vColor;
 
-	'diffuseColor.rgb *= vColor;',
+#elif defined( USE_COLOR )
 
-'#endif',
+	diffuseColor.rgb *= vColor;
 
-'#if defined(INSTANCE_COLOR)',
-		
-	'diffuseColor.rgb *= vInstanceColor;',
-		
-'#endif'
+#endif
 
-].join("\n")
+#if defined( INSTANCE_COLOR )
+
+	diffuseColor.rgb *= vInstanceColor;
+
+#endif
+`
